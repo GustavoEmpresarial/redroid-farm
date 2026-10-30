@@ -1,0 +1,17 @@
+# Redroid Farm data and caches
+data/
+*.log
+__pycache__/
+*.py[cod]
+
+# APK binaries (downloaded via script / manual)
+*.apk
+apks/*.apk
+!apks/.gitkeep
+
+# Environment and temporary files
+.env
+.env.*
+*.tmp
+*.part
+.DS_Store

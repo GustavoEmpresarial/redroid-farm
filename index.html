@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redroid Farm · Celulares Virtuais Android 13</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; --bg: #0a1022; --card-bg: #111a30; --card-border: #25314b; --accent: #3984ff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: radial-gradient(ellipse at 15% 0%, #182e5680, transparent 55%), radial-gradient(ellipse at 95% 75%, #18395535, transparent 50%), var(--bg); color: #eef3ff; font-family: 'Space Grotesk', sans-serif; }
+    body::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; background-image: linear-gradient(#7fa9ee04 1px, transparent 1px), linear-gradient(90deg, #7fa9ee04 1px, transparent 1px); background-size: 64px 64px; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .glass { background: linear-gradient(145deg, #17233be8, #10182ceF); border: 1px solid var(--card-border); box-shadow: inset 0 1px 0 #ffffff05; }
+    button, select, input { font: inherit; }
+    button { cursor: pointer; transition: background .18s, border-color .18s, box-shadow .18s, transform .18s; }
+    button:active:not(:disabled) { transform: translateY(1px); }
+    button:disabled { cursor: wait; opacity: .55; }
+    button:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid #75b3ff; outline-offset: 4px; }
+    .dot-live { box-shadow: 0 0 9px #38d9a080; }
+    .btn { min-height: 42px; border-radius: 12px; padding: 10px 15px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; font-size: 12px; font-weight: 700; border: 1px solid #344361; color: #dbe6ff; background: linear-gradient(#202d47, #19243b); box-shadow: inset 0 1px 0 #ffffff09, 0 3px 0 #060c1b80; }
+    .btn:hover { background: #293b59; border-color: #5274a8; box-shadow: 0 0 20px #3984ff13; }
+    .btn-primary { color: white; background: linear-gradient(180deg, #448fff, #2b71ee); border-color: #6ba5ff80; box-shadow: inset 0 1px 0 #ffffff25, 0 3px 0 #164ca6, 0 6px 20px #247aff20; }
+    .btn-primary:hover { background: linear-gradient(180deg, #65a4ff, #3984ff); border-color: #9bc5ff; box-shadow: inset 0 1px 0 #ffffff25, 0 3px 0 #164ca6, 0 6px 24px #247aff40; }
+    .btn-danger { color: #ffa3b4; background: #ef577614; border-color: #ef577630; }
+    .btn-danger:hover { color: #ffc9d3; background: #ef577627; border-color: #ef577660; }
+    .btn-icon { width: 42px; padding: 0; flex-shrink: 0; }
+    .app-header { position: sticky; top: 0; z-index: 40; background: #0b1225ed; backdrop-filter: blur(20px); border-bottom: 1px solid #ffffff09; }
+    .header-inner { max-width: 1320px; padding: 18px 28px; margin: auto; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon { width: 43px; height: 43px; display: grid; place-items: center; border-radius: 13px; color: #7bb8ff; font-size: 23px; background: linear-gradient(140deg, #387ffb35, #3984ff10); border: 1px solid #438dff50; box-shadow: 0 0 22px #3984ff15; }
+    .brand-name { font-size: 19px; font-weight: 700; letter-spacing: -.7px; }
+    .brand-name span { color: #5e9fff; }
+    .brand-subtitle { font-size: 10px; color: #7d90b1; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+    .header-actions { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
+    .dashboard { max-width: 1320px; margin: auto; padding: 32px 28px; }
+    .overview-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    .eyebrow { color: #77a9ff; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.8px; }
+    .overview-heading h1 { margin: 5px 0 6px; font-size: clamp(24px, 3vw, 32px); font-weight: 700; letter-spacing: -1.1px; }
+    .muted { color: #899ab7; font-size: 12px; }
+    .live-badge { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; border: 1px solid #46d7a52b; border-radius: 30px; background: #37d59c0a; color: #77e4bd; font-size: 10px; font-weight: 700; padding: 7px 11px; }
+    .live-badge::before { content: ''; width: 6px; height: 6px; border-radius: 100%; background: currentColor; box-shadow: 0 0 8px #46d7a560; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 32px; }
+    .stat-card { padding: 18px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; }
+    .stat-label { color: #93a3bd; font-size: 11px; }
+    .stat-value { font-size: 27px; font-weight: 700; letter-spacing: -.8px; margin: 5px 0 3px; }
+    .stat-note { color: #7385a3; font-size: 10px; }
+    .stat-icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: #3984ff10; border: 1px solid #3984ff20; color: #72aaff; }
+    .fleet-heading { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 17px; }
+    .fleet-heading h2 { font-size: 17px; font-weight: 700; letter-spacing: -.4px; }
+    #devicesGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+    .device-card { border-radius: 19px; padding: 17px; min-width: 0; }
+    .device-card:hover { border-color: #3b5d91; }
+    .device-title { font-size: 13px; font-weight: 700; overflow-wrap: anywhere; }
+    .device-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .device-meta { font-size: 10px; color: #7c90ae; margin-top: 5px; }
+    .device-preview { display: flex; justify-content: center; padding: 16px; border-radius: 12px; background: radial-gradient(ellipse at center, #24447540, transparent 75%), #080f20; border: 1px solid #202c44; margin-bottom: 14px; }
+    .card-screen { aspect-ratio: 9 / 16; background: #050913; width: 126px; overflow: hidden; border: 1px solid #ffffff15; border-radius: 9px; padding: 0; position: relative; box-shadow: 0 8px 24px #00000050; }
+    .card-screen img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .screen-overlay { position: absolute; inset: 0; display: grid; place-items: center; background: #08132699; opacity: 0; transition: opacity .2s; color: white; font-size: 20px; }
+    .card-screen:hover .screen-overlay, .card-screen:focus-visible .screen-overlay { opacity: 1; }
+    .device-info { display: grid; gap: 8px; padding: 14px 0; font-size: 10px; color: #8295b3; }
+    .device-info div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .device-info strong { color: #c6d4ee; font-weight: 500; max-width: 65%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .device-footer { display: flex; gap: 7px; border-top: 1px solid #ffffff09; padding-top: 12px; }
+    .device-footer .btn { min-height: 35px; font-size: 10px; border-radius: 9px; }
+    .empty-state { grid-column: 1 / -1; border: 1px dashed #344361; border-radius: 20px; text-align: center; padding: 60px 24px; }
+    .empty-state > i { font-size: 30px; color: #5596ff; margin-bottom: 18px; }
+    .empty-state h3 { font-size: 19px; font-weight: 700; margin-bottom: 8px; }
+    .empty-state p { color: #899ab7; font-size: 12px; margin-bottom: 22px; }
+    #modalRemote { background: radial-gradient(ellipse at 35% 40%, #14284ee8, #060b18f5 75%); backdrop-filter: blur(18px); padding: 24px; }
+    #modalRemote.hidden { display: none; }
+    .remote-layout { display: grid; grid-template-columns: auto 358px; align-items: center; gap: 38px; margin: auto; }
+    .remote-stage { display: flex; flex-direction: column; align-items: center; gap: 13px; min-width: 0; }
+    .stage-heading { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 3px; }
+    .stage-heading .eyebrow { color: #91a6ca; font-size: 9px; letter-spacing: 1.6px; }
+    .aspect-badge { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #9cc3ff; background: #3984ff15; border: 1px solid #3984ff30; padding: 4px 9px; border-radius: 7px; }
+    /* The 9:16 stream already includes Android's navigation bar. */
+    .remote-phone-frame { width: min(calc((100dvh - 136px) * 9 / 16 + 16px), 44vw, 480px); background: linear-gradient(145deg, #263550, #10192b); padding: 7px; border: 1px solid #52658380; border-radius: 27px; box-shadow: inset 0 1px 0 #ffffff20, 0 28px 70px #00000065, 0 0 70px #3984ff0d; }
+    .remote-phone-screen { width: 100%; aspect-ratio: 9 / 16; background: #000; border-radius: 20px; overflow: hidden; position: relative; cursor: crosshair; user-select: none; touch-action: none; outline: none; }
+    .remote-phone-screen:focus { box-shadow: 0 0 0 2px #3984ff inset; }
+    .remote-phone-screen img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: block; }
+    .stage-hint { color: #7085a7; font-size: 10px; display: flex; align-items: center; gap: 6px; }
+    .control-panel { width: 358px; max-height: calc(100dvh - 48px); overflow-y: auto; padding: 22px; border-radius: 22px; background: linear-gradient(150deg, #192641, #101a2f 75%); border: 1px solid #32435e; box-shadow: inset 0 1px 0 #ffffff06, 0 24px 60px #00000040; scrollbar-width: thin; scrollbar-color: #344564 transparent; }
+    .panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; border-bottom: 1px solid #ffffff0b; padding-bottom: 17px; margin-bottom: 17px; }
+    .panel-header .eyebrow { margin-bottom: 8px; font-size: 9px; }
+    #remoteTitle { font-size: 17px; font-weight: 700; letter-spacing: -.4px; overflow-wrap: anywhere; }
+    #remotePortLbl { display: block; color: #8296b8; font-size: 10px; margin-top: 5px; }
+    .panel-section { margin-bottom: 17px; }
+    .field-label { display: block; margin-bottom: 8px; color: #a6b7d2; font-size: 10px; font-weight: 700; letter-spacing: .6px; }
+    .field { width: 100%; min-width: 0; height: 42px; border: 1px solid #30405d; border-radius: 11px; background: #0a1428; color: #e2ebfc; font-size: 11px; padding: 0 12px; transition: border-color .18s; }
+    .field:hover { border-color: #506d96; }
+    .field::placeholder { color: #6b80a2; }
+    select.field { cursor: pointer; }
+    .input-row { display: flex; gap: 7px; }
+    .field-help { font-size: 9px; color: #7185a6; margin-top: 7px; line-height: 1.5; }
+    .control-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; }
+    .control-key { min-height: 65px; border: 1px solid #344361; border-radius: 12px; background: linear-gradient(#24334f, #19263e); box-shadow: inset 0 1px 0 #ffffff09, 0 3px 0 #080f20; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #a7bfdf; }
+    .control-key:hover { background: #2c4164; border-color: #5b82b9; color: white; transform: translateY(-2px); }
+    .control-key span { font-size: 9px; }
+    .control-key i { font-size: 14px; }
+    .app-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .app-shortcut { display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 11px; text-align: left; border-radius: 13px; border: 1px solid #30415e; background: linear-gradient(140deg, #22324e, #19253c); box-shadow: inset 0 1px 0 #ffffff07, 0 3px 0 #080f2070; }
+    .app-shortcut:hover { border-color: #5c87c4; background: #293d5d; transform: translateY(-2px); }
+    .app-icon { width: 30px; height: 30px; flex-shrink: 0; display: grid; place-items: center; background: #3984ff15; border-radius: 9px; color: #75afff; font-size: 15px; }
+    .app-shortcut strong { display: block; font-size: 10px; color: #e6eeff; }
+    .app-shortcut small { display: block; font-size: 9px; color: #7e96b9; margin-top: 3px; }
+    .panel-footer { padding-top: 16px; border-top: 1px solid #ffffff0b; }
+    .panel-footer .btn { width: 100%; }
+    .stream-state { color: #90c2ff; font-size: 10px; }
+    .touch-ripple { position: absolute; border-radius: 50%; background: #6da8ff80; transform: translate(-50%, -50%); pointer-events: none; animation: ripple .35s ease-out forwards; }
+    @keyframes ripple { from { width: 10px; height: 10px; opacity: 1; } to { width: 45px; height: 45px; opacity: 0; } }
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 100; padding: 13px 20px; border-radius: 13px; border: 1px solid #47658b; background: #1c2e4c; color: #e6f0ff; box-shadow: 0 10px 30px #0005; font-size: 12px; max-width: calc(100vw - 32px); }
+    .toast[data-error='true'] { background: #3c2031; border-color: #995067; }
+    .resolution-note { display: flex; align-items: center; gap: 11px; padding: 13px; border: 1px solid #3984ff35; border-radius: 12px; background: #3984ff0c; color: #a8caff; font-size: 11px; }
+    #modalNewPhone > div, #modalInstallApk > div { max-height: calc(100dvh - 32px); overflow-y: auto; }
+    .remote-mobile-close { display: none; }
+    @media (min-width: 761px) and (max-height: 800px) {
+      .control-panel { padding: 18px; }
+      .panel-header { padding-bottom: 10px; margin-bottom: 10px; }
+      .panel-section { margin-bottom: 10px; }
+      .field-label { margin-bottom: 6px; }
+      .control-key { min-height: 56px; }
+      .app-shortcut { min-height: 50px; padding: 9px; }
+      .app-grid { gap: 7px; }
+      .field { height: 40px; }
+      .panel-footer { padding-top: 12px; }
+    }
+    @media (max-width: 1000px) { .header-inner { align-items: flex-start; } .header-actions { justify-content: flex-end; } .header-actions .btn { font-size: 10px; padding: 9px 10px; } }
+    @media (max-width: 760px) {
+      .header-inner { padding: 16px 18px; flex-wrap: wrap; gap: 16px; }
+      .header-actions { width: 100%; justify-content: flex-start; }
+      .dashboard { padding: 26px 18px; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .stat-card { padding: 14px; } .stat-icon { display: none; }
+      .overview-heading { align-items: flex-start; } .overview-heading > .live-badge { margin-top: 6px; }
+      .overview-heading .muted { max-width: 220px; line-height: 1.6; }
+      #modalRemote { align-items: flex-start; padding: 20px 14px; }
+      .remote-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; width: 100%; max-width: 440px; }
+      .remote-stage { width: 100%; }
+      .remote-mobile-close { display: flex; position: fixed; top: 10px; right: 10px; z-index: 2; width: 34px; min-height: 34px; background: #172640; }
+      .stage-heading { max-width: 350px; }
+      .remote-phone-frame { width: min(calc((100dvh - 129px) * 9 / 16 + 16px), 100%, 350px); }
+      .control-panel { width: 100%; max-height: none; padding: 20px; }
+      .stage-hint { font-size: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon"><i class="fab fa-android" aria-hidden="true"></i></div>
+        <div><div class="brand-name">redroid<span>farm</span><span style="color:#7791b7;font-size:10px;margin-left:8px;letter-spacing:0">/ 13</span></div><div class="brand-subtitle">Seu centro de controle Android</div></div>
+      </div>
+      <div class="header-actions">
+        <button id="btnInstallApkModal" class="btn"><i class="fas fa-box"></i> Instalar APK</button>
+        <button id="btnSetupAllPlaybots" class="btn"><i class="fas fa-robot"></i> Config. PlayBots</button>
+        <button id="btnStartAll" class="btn btn-icon" title="Ligar todos" aria-label="Ligar todos"><i class="fas fa-play" style="color:#74dfb5"></i></button>
+        <button id="btnStopAll" class="btn btn-icon btn-danger" title="Desligar todos" aria-label="Desligar todos"><i class="fas fa-stop"></i></button>
+        <button id="btnNewPhone" class="btn btn-primary"><i class="fas fa-plus"></i> Novo celular</button>
+      </div>
+    </div>
+  </header>
+  <main class="dashboard">
+    <div class="overview-heading">
+      <div><div class="eyebrow">Workspace / Visão geral</div><h1>Sua frota, sob controle.</h1><p class="muted">Acompanhe e controle seus celulares em um só lugar.</p></div>
+      <span class="live-badge">Atualização ao vivo</span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card glass"><div><div class="stat-label">Total de celulares</div><div id="statTotal" class="stat-value">—</div><div class="stat-note">Na sua frota</div></div><div class="stat-icon"><i class="fas fa-layer-group"></i></div></div>
+      <div class="stat-card glass"><div><div class="stat-label">Celulares ligados</div><div id="statRunning" class="stat-value" style="color:#76e4b9">—</div><div class="stat-note">Containers em execução</div></div><div class="stat-icon" style="color:#76e4b9;background:#37d59c0c;border-color:#37d59c20"><i class="fas fa-signal"></i></div></div>
+      <div class="stat-card glass"><div><div class="stat-label">Memória em uso</div><div id="statRam" class="stat-value">—</div><div class="stat-note">Consumo total de RAM</div></div><div class="stat-icon"><i class="fas fa-microchip"></i></div></div>
+      <div class="stat-card glass"><div><div class="stat-label">Próxima porta ADB</div><div id="statNextPort" class="stat-value font-mono" style="color:#80b4ff">—</div><div class="stat-note">Disponível para novo celular</div></div><div class="stat-icon"><i class="fas fa-plug"></i></div></div>
+    </div>
+    <div class="fleet-heading"><div><h2>Meus celulares</h2><p class="muted" style="font-size:10px;margin-top:4px">Visualização vertical · 9:16</p></div><button id="btnRefresh" class="btn" style="min-height:35px;font-size:10px"><i class="fas fa-rotate"></i> Atualizar</button></div>
+    <div id="devicesGrid" aria-live="polite"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Carregando seus celulares...</p></div></div>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- MODAL DE CONTROLE REMOTO INTERATIVO (A TELINHA AO VIVO) -->
+  <!-- ======================================================== -->
+  <div id="modalRemote" class="fixed inset-0 z-50 hidden flex items-center justify-center overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="remoteTitle" tabindex="-1">
+    <button onclick="closeRemoteModal()" class="btn btn-icon remote-mobile-close" aria-label="Fechar visualização" title="Fechar controle remoto"><i class="fas fa-xmark"></i></button>
+    <div class="remote-layout">
+      <div class="remote-stage">
+        <div class="stage-heading"><span class="eyebrow"><i class="fas fa-mobile-screen" style="margin-right:6px"></i> Controle remoto</span><span class="aspect-badge">9:16</span></div>
+        <div id="remotePhoneFrame" class="remote-phone-frame">
+          <div id="remoteScreen" class="remote-phone-screen" aria-label="Tela do Android: toque, arraste ou digite diretamente" tabindex="0">
+            <img id="remoteImg" alt="Tela ao vivo do Android" draggable="false">
+          </div>
+        </div>
+        <div class="stage-hint"><i class="fas fa-keyboard" style="color:#7bb8ff"></i> Teclado do PC ativo · Digite e cole com Ctrl+V diretamente <span id="remoteResolution" class="font-mono" style="margin-left:8px">720 × 1280</span></div>
+      </div>
+      <aside class="control-panel" aria-label="Controles do celular">
+        <div class="panel-header">
+          <div><div class="eyebrow">Dispositivo conectado</div><h2 id="remoteTitle">redroid-phone-1</h2><span id="remotePortLbl" class="font-mono">127.0.0.1:5556</span><div id="streamState" class="stream-state" role="status" style="margin-top:10px">Conectando à tela...</div></div>
+          <button id="btnCloseRemote" onclick="closeRemoteModal()" class="btn btn-icon" style="width:32px;min-height:32px;border-radius:10px" title="Fechar (Esc)" aria-label="Fechar controle remoto"><i class="fas fa-xmark"></i></button>
+        </div>
+        <section class="panel-section"><label for="remoteDeviceSelect" class="field-label">DISPOSITIVO</label><select id="remoteDeviceSelect" onchange="switchRemoteDevice(this.value)" class="field"></select></section>
+        <section class="panel-section">
+          <label for="remoteTextInput" class="field-label">ENVIAR TEXTO</label>
+          <div class="input-row"><input type="text" id="remoteTextInput" placeholder="Digite aqui para enviar ao celular" class="field" autocomplete="off"><button onclick="sendRemoteText()" class="btn btn-primary btn-icon" title="Enviar texto" aria-label="Enviar texto"><i class="fas fa-paper-plane"></i></button></div>
+          <p class="field-help">Selecione um campo no Android e pressione Enter para enviar.</p>
+        </section>
+        <section class="panel-section">
+          <label for="remoteProxyInput" class="field-label">CONEXÃO PROXY</label>
+          <div class="input-row"><input type="text" id="remoteProxyInput" placeholder="IP:porta · ex. 192.168.1.100:8080" class="field font-mono" style="font-size:10px" autocomplete="off"><button onclick="saveRemoteProxy()" class="btn btn-icon" title="Aplicar proxy" aria-label="Aplicar proxy"><i class="fas fa-check" style="color:#7bb8ff"></i></button><button onclick="clearRemoteProxy()" class="btn btn-icon btn-danger" title="Remover proxy" aria-label="Remover proxy"><i class="fas fa-ban"></i></button></div>
+        </section>
+        <section class="panel-section"><h3 class="field-label">CONTROLES RÁPIDOS</h3>
+          <div class="control-grid">
+            <button onclick="sendRemoteKey(26)" class="control-key" title="Ligar ou desligar a tela"><i class="fas fa-power-off" style="color:#ff93ac"></i><span>Tela</span></button>
+            <button onclick="sendRemoteKey(24)" class="control-key" title="Aumentar volume"><i class="fas fa-volume-high" style="color:#79b6ff"></i><span>Vol +</span></button>
+            <button onclick="sendRemoteKey(25)" class="control-key" title="Diminuir volume"><i class="fas fa-volume-low" style="color:#79b6ff"></i><span>Vol −</span></button>
+            <button onclick="sendRemoteKey(82)" class="control-key" title="Abrir menu"><i class="fas fa-bars"></i><span>Menu</span></button>
+            <button onclick="restartActiveRemote(this)" class="control-key" title="Reiniciar celular"><i class="fas fa-rotate-right" style="color:#f6c776"></i><span>Reiniciar</span></button>
+          </div>
+        </section>
+        <section class="panel-section"><h3 class="field-label">SEUS APLICATIVOS</h3>
+          <div class="app-grid">
+            <button onclick="launchApp('google_account')" class="app-shortcut"><span class="app-icon"><i class="fab fa-google"></i></span><span><strong>Conta Google</strong><small>Entrar ou trocar</small></span></button>
+            <button onclick="launchApp('youtube')" class="app-shortcut"><span class="app-icon" style="color:#ff718f;background:#ff577812"><i class="fab fa-youtube"></i></span><span><strong>YouTube</strong><small>Abrir aplicativo</small></span></button>
+            <button onclick="launchApp('com.playzero.playbotsseofast/.LoginLicencaActivity')" class="app-shortcut"><span class="app-icon" style="color:#f6cc79;background:#f6cc7910"><i class="fas fa-robot"></i></span><span><strong>PlayBots</strong><small>Tela inicial</small></span></button>
+            <button onclick="launchApp('com.android.settings/.Settings')" class="app-shortcut"><span class="app-icon" style="color:#a9b9d5;background:#a9b9d510"><i class="fas fa-gear"></i></span><span><strong>Ajustes</strong><small>Configurar Android</small></span></button>
+          </div>
+        </section>
+        <div class="panel-footer"><button onclick="launchScrcpy(activeRemoteDevice)" class="btn"><i class="fas fa-arrow-up-right-from-square" style="color:#89b7ff"></i> Abrir janela nativa <span style="color:#7189ad;font-size:9px">scrcpy</span></button></div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Modal Novo Celular -->
+  <div id="modalNewPhone" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass p-6 rounded-2xl w-full max-w-md border border-blue-500/20 shadow-2xl">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <h3 class="font-bold text-white text-base">Novo celular Android 13</h3>
+        <button onclick="closeModal('modalNewPhone')" class="btn btn-icon" aria-label="Fechar novo celular">&times;</button>
+      </div>
+      <form id="formNewPhone" class="mt-4 space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Nome do Dispositivo</label>
+          <input type="text" id="inputPhoneName" class="field" required placeholder="redroid-phone-4">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Porta ADB Externa</label>
+            <input type="number" id="inputPhonePort" class="field" required value="5559">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Densidade (DPI)</label>
+            <input type="number" id="inputPhoneDpi" class="field" value="320">
+          </div>
+        </div>
+        <div>
+          <label for="inputPhoneResolution" class="field-label">RESOLUÇÃO · FORMATO 9:16</label>
+          <select id="inputPhoneResolution" class="field" onchange="setPhoneResolution(this.value)">
+            <option value="540x960">540 × 960 · Leve</option>
+            <option value="720x1280" selected>720 × 1280 · HD (recomendado)</option>
+            <option value="1080x1920">1080 × 1920 · Full HD</option>
+          </select>
+          <input type="hidden" id="inputPhoneWidth" value="720">
+          <input type="hidden" id="inputPhoneHeight" value="1280">
+        </div>
+        <div class="resolution-note"><i class="fas fa-mobile-screen"></i><span>Tela vertical 9:16<br><small style="color:#8199be">A visualização preserva a proporção original, sem distorção.</small></span></div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modalNewPhone')" class="btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Criar e Iniciar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Instalar APK -->
+  <div id="modalInstallApk" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass p-6 rounded-2xl w-full max-w-md border border-sky-500/20 shadow-2xl">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <h3 class="font-bold text-white text-base">Instalar APK nos Celulares</h3>
+        <button onclick="closeModal('modalInstallApk')" class="btn btn-icon" aria-label="Fechar instalação de APK">&times;</button>
+      </div>
+      <form id="formInstallApk" class="mt-4 space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Escolha o APK (pasta apks/)</label>
+          <select id="selectApkName" class="field"></select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Destino</label>
+          <select id="selectApkTarget" class="field">
+            <option value="all">Todos os Celulares Online</option>
+          </select>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modalInstallApk')" class="btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Instalar Agora</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  <script>
+    let devices = [];
+    let activeRemoteDevice = null;
+    let remoteStreamTimer = null;
+    let streamGeneration = 0;
+    let remoteReturnFocus = null;
+    let toastTimer = null;
+    let devicesLoading = false;
+    let gridSignature = null;
+    const $ = (id) => document.getElementById(id);
+
+    function closeModal(id) { $(id).classList.add('hidden'); }
+    function openModal(id) { $(id).classList.remove('hidden'); }
+
+    function setPhoneResolution(value) {
+      const [width, height] = value.split('x').map(Number);
+      $('inputPhoneWidth').value = width;
+      $('inputPhoneHeight').value = height;
+    }
+
+    function notify(message, error = false) {
+      const toast = $('toast');
+      toast.textContent = message;
+      toast.dataset.error = String(error);
+      toast.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.add('hidden'), 4000);
+    }
+
+    async function remoteRequest(endpoint, payload) {
+      if (!activeRemoteDevice) return false;
+      try {
+        const res = await fetch(`/api/device/${encodeURIComponent(activeRemoteDevice)}/${endpoint}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok || data.ok === false) throw new Error(data.error || 'Não foi possível concluir o comando.');
+        return true;
+      } catch (err) { notify(err.message || 'Falha na conexão com o celular.', true); return false; }
+    }
+
+    // ----------------------------------------------------
+    // CONTROLE REMOTO INTERATIVO
+    // ----------------------------------------------------
+    function openRemoteModal(name) {
+      if ($('modalRemote').classList.contains('hidden')) remoteReturnFocus = document.activeElement;
+      activeRemoteDevice = name;
+      const dev = devices.find(d => d.name === name);
+      $('remoteTitle').textContent = name;
+      $('remotePortLbl').textContent = dev ? `127.0.0.1:${dev.adb_port}` : '';
+      
+      const sel = $('remoteDeviceSelect');
+      sel.innerHTML = devices.map(d => `<option value="${d.name}" ${d.name === name ? 'selected' : ''}>${d.name} (Porta ${d.adb_port})</option>`).join('');
+      
+      const currentProxy = (dev && dev.info) ? dev.info.proxy : '';
+      $('remoteProxyInput').value = currentProxy || '';
+
+      openModal('modalRemote');
+      document.body.style.overflow = 'hidden';
+      document.querySelector('header').inert = true;
+      document.querySelector('main').inert = true;
+      $('btnCloseRemote').focus();
+      startRemoteStream();
+    }
+
+    function closeRemoteModal() {
+      closeModal('modalRemote');
+      stopRemoteStream();
+      activeRemoteDevice = null;
+      updateDeviceGrid();
+      document.body.style.overflow = '';
+      document.querySelector('header').inert = false;
+      document.querySelector('main').inert = false;
+      if (remoteReturnFocus?.isConnected) remoteReturnFocus.focus();
+    }
+
+    function switchRemoteDevice(name) {
+      openRemoteModal(name);
+    }
+
+    function startRemoteStream() {
+      stopRemoteStream();
+      if (!activeRemoteDevice) return;
+      const generation = streamGeneration;
+      const name = activeRemoteDevice;
+      const img = $('remoteImg');
+      img.removeAttribute('src');
+      $('streamState').textContent = 'Conectando à tela...';
+      $('remoteResolution').textContent = '—';
+      function isCurrent() { return generation === streamGeneration && name === activeRemoteDevice && !$('modalRemote').classList.contains('hidden'); }
+      function updateFrame() {
+        if (!isCurrent()) return;
+        const nextImg = new Image();
+        nextImg.onload = () => {
+          if (!isCurrent()) return;
+          img.src = nextImg.src;
+          $('remoteResolution').textContent = `${nextImg.naturalWidth} × ${nextImg.naturalHeight}`;
+          $('streamState').textContent = '● Tela ao vivo';
+          $('streamState').style.color = '#77e4bd';
+          remoteStreamTimer = setTimeout(updateFrame, 100);
+        };
+        nextImg.onerror = () => {
+          if (!isCurrent()) return;
+          $('streamState').textContent = 'Reconectando à tela...';
+          $('streamState').style.color = '#f6cc79';
+          remoteStreamTimer = setTimeout(updateFrame, 1000);
+        };
+        nextImg.src = `/api/device/${encodeURIComponent(name)}/screen.jpg?t=${Date.now()}`;
+      }
+      updateFrame();
+    }
+
+    function stopRemoteStream() {
+      streamGeneration++;
+      clearTimeout(remoteStreamTimer);
+      remoteStreamTimer = null;
+    }
+
+    // Map touch coordinates to the real image, including any object-fit letterboxing.
+    const screenEl = $('remoteScreen');
+    let gesture = null;
+    function screenPoint(e, clamp = false) {
+      const img = $('remoteImg');
+      if (!img.naturalWidth || !img.naturalHeight) return null;
+      const rect = screenEl.getBoundingClientRect();
+      const scale = Math.min(rect.width / img.naturalWidth, rect.height / img.naturalHeight);
+      const left = rect.left + (rect.width - img.naturalWidth * scale) / 2;
+      const top = rect.top + (rect.height - img.naturalHeight * scale) / 2;
+      const x = (e.clientX - left) / scale, y = (e.clientY - top) / scale;
+      if (!clamp && (x < 0 || y < 0 || x >= img.naturalWidth || y >= img.naturalHeight)) return null;
+      return { x: Math.round(Math.max(0, Math.min(img.naturalWidth - 1, x))), y: Math.round(Math.max(0, Math.min(img.naturalHeight - 1, y))) };
+    }
+    screenEl.addEventListener('pointerdown', e => {
+      if (e.button !== 0 || !activeRemoteDevice) return;
+      const point = screenPoint(e);
+      if (!point) return;
+      e.preventDefault();
+      screenEl.focus();
+      gesture = { ...point, time: Date.now(), id: e.pointerId, device: activeRemoteDevice };
+      screenEl.setPointerCapture(e.pointerId);
+      const rect = screenEl.getBoundingClientRect();
+      const ripple = document.createElement('div');
+      ripple.className = 'touch-ripple';
+      ripple.style.left = `${e.clientX - rect.left}px`;
+      ripple.style.top = `${e.clientY - rect.top}px`;
+      screenEl.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 350);
+    });
+    screenEl.addEventListener('pointerup', async e => {
+      if (!gesture || gesture.id !== e.pointerId) return;
+      const start = gesture;
+      gesture = null;
+      if (start.device !== activeRemoteDevice) return;
+      const end = screenPoint(e, true);
+      if (!end) return;
+      const duration = Math.max(50, Date.now() - start.time);
+      if (Math.hypot(end.x - start.x, end.y - start.y) < 12 && duration < 350) {
+        await remoteRequest('input', { action: 'tap', x: start.x, y: start.y });
+      } else {
+        await remoteRequest('input', { action: 'swipe', x1: start.x, y1: start.y, x2: end.x, y2: end.y, duration: Math.min(duration, 1500) });
+      }
+    });
+    screenEl.addEventListener('pointercancel', () => { gesture = null; });
+    screenEl.addEventListener('lostpointercapture', () => { gesture = null; });
+    // Teclas especiais mapeadas para Android Keycodes
+    const specialKeyMap = {
+      'Backspace': 67,  // KEYCODE_DEL
+      'Delete': 112,    // KEYCODE_FORWARD_DEL
+      'Enter': 66,      // KEYCODE_ENTER
+      'Tab': 61,        // KEYCODE_TAB
+      'ArrowLeft': 21,  // KEYCODE_DPAD_LEFT
+      'ArrowRight': 22, // KEYCODE_DPAD_RIGHT
+      'ArrowUp': 19,    // KEYCODE_DPAD_UP
+      'ArrowDown': 20,  // KEYCODE_DPAD_DOWN
+    };
+
+    // Colar da área de transferência do PC (Ctrl+V)
+    document.addEventListener('paste', async (e) => {
+      if ($('modalRemote').classList.contains('hidden') || !activeRemoteDevice) return;
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+      e.preventDefault();
+      const text = e.clipboardData ? e.clipboardData.getData('text') : '';
+      if (text) {
+        await remoteRequest('input', { action: 'paste', text });
+        notify('Texto colado no celular!');
+      }
+    });
+
+    // Digitação direta do teclado do PC no Android
+    document.addEventListener('keydown', async (e) => {
+      if ($('modalRemote').classList.contains('hidden') || !activeRemoteDevice) return;
+
+      // Se o usuário está digitando em campos de formulário locais (ex: input manual ou proxy)
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
+        if (e.key === 'Escape') { e.preventDefault(); closeRemoteModal(); }
+        return;
+      }
+
+      // Atalhos com Ctrl / Cmd
+      if (e.ctrlKey || e.metaKey) {
+        const k = e.key.toLowerCase();
+        if (k === 'v') {
+          e.preventDefault();
+          try {
+            const text = await navigator.clipboard.readText();
+            if (text) {
+              await remoteRequest('input', { action: 'paste', text });
+              notify('Texto colado no celular!');
+            }
+          } catch (err) {
+            // Em navegadores restritos, o listener 'paste' acima cuida do evento
+          }
+          return;
+        }
+        if (k === 'c') {
+          e.preventDefault();
+          await sendRemoteKey(278); // KEYCODE_COPY
+          return;
+        }
+        if (k === 'a') {
+          e.preventDefault();
+          await remoteRequest('input', { action: 'key', keycode: '29 --meta 4096' }); // Ctrl+A
+          return;
+        }
+        if (k === 'x') {
+          e.preventDefault();
+          await sendRemoteKey(277); // KEYCODE_CUT
+          return;
+        }
+        return;
+      }
+
+      // Tecla Escape: Shift+Esc fecha modal, Esc normal envia Voltar (Back) ao Android
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        if (e.shiftKey) {
+          closeRemoteModal();
+        } else {
+          await sendRemoteKey(4); // KEYCODE_BACK
+        }
+        return;
+      }
+
+      // Teclas de navegação e controle
+      if (specialKeyMap[e.key]) {
+        e.preventDefault();
+        await sendRemoteKey(specialKeyMap[e.key]);
+        return;
+      }
+
+      // Caracteres imprimíveis normais (letras, números, acentos, pontuação, espaço)
+      if (e.key.length === 1 && !e.altKey) {
+        e.preventDefault();
+        await remoteRequest('input', { action: 'text', text: e.key });
+      }
+    });
+
+    async function sendRemoteKey(keycode) {
+      await remoteRequest('input', { action: 'key', keycode });
+    }
+
+    async function sendRemoteText() {
+      const input = $('remoteTextInput');
+      const text = input.value;
+      if (!text || !activeRemoteDevice) return;
+      if (await remoteRequest('input', { action: 'text', text })) {
+        input.value = '';
+        notify('Texto enviado ao celular.');
+      }
+    }
+    $('remoteTextInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendRemoteText(); });
+
+    async function saveRemoteProxy() {
+      const proxy = $('remoteProxyInput').value.trim();
+      if (await remoteRequest('proxy', { proxy })) {
+        notify(proxy ? 'Proxy aplicado ao celular.' : 'Proxy removido. Conexão direta ativada.');
+        loadDevices();
+      }
+    }
+    function clearRemoteProxy() { $('remoteProxyInput').value = ''; return saveRemoteProxy(); }
+    async function launchApp(pkg) { await remoteRequest('input', { action: 'launch', package: pkg }); }
+
+    // ----------------------------------------------------
+    // CARDS & CRUD DE CELULARES
+    // ----------------------------------------------------
+    $('btnNewPhone').addEventListener('click', () => {
+      fetch('/api/devices').then(r => r.json()).then(d => {
+        $('inputPhonePort').value = d.next_port || 5559;
+        $('inputPhoneName').value = `redroid-phone-${(d.devices || []).length + 1}`;
+        openModal('modalNewPhone');
+      });
+    });
+
+    $('btnInstallApkModal').addEventListener('click', async () => {
+      const res = await fetch('/api/apks');
+      const data = await res.json();
+      const sel = $('selectApkName');
+      sel.innerHTML = (data.apks || []).map(a => `<option value="${a}">${a}</option>`).join('');
+      
+      const targetSel = $('selectApkTarget');
+      targetSel.innerHTML = '<option value="all">Todos os Celulares Online</option>' + 
+        devices.filter(d => d.running).map(d => `<option value="${d.name}">${d.name} (Porta ${d.adb_port})</option>`).join('');
+      
+      openModal('modalInstallApk');
+    });
+
+    $('formNewPhone').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: $('inputPhoneName').value,
+        port: parseInt($('inputPhonePort').value),
+        width: parseInt($('inputPhoneWidth').value),
+        height: parseInt($('inputPhoneHeight').value),
+        dpi: parseInt($('inputPhoneDpi').value)
+      };
+      closeModal('modalNewPhone');
+      await fetch('/api/devices/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      loadDevices();
+    });
+
+    $('formInstallApk').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        apk_name: $('selectApkName').value,
+        target: $('selectApkTarget').value
+      };
+      closeModal('modalInstallApk');
+      alert('Instalação iniciada em segundo plano!');
+      await fetch('/api/apks/install', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      loadDevices();
+    });
+
+    $('btnSetupAllPlaybots').addEventListener('click', async () => {
+      if (!confirm('Deseja configurar permissões do PlayBots (Acessibilidade, Sobreposição, Áudio, Bateria) em todos os celulares?')) return;
+      await fetch('/api/devices/setup_playbots', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target: 'all' })
+      });
+      alert('Permissões aplicadas com sucesso!');
+      loadDevices();
+    });
+
+    $('btnStartAll').addEventListener('click', async () => {
+      await fetch('/api/devices/all/action', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'start' }) });
+      loadDevices();
+    });
+    $('btnStopAll').addEventListener('click', async () => {
+      await fetch('/api/devices/all/action', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'stop' }) });
+      loadDevices();
+    });
+
+    async function containerAction(name, action, btn) {
+      if (action === 'delete' && !confirm(`Excluir permanentemente o container ${name}?`)) return;
+      const previous = btn?.innerHTML;
+      if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+      try {
+        const res = await fetch(`/api/device/${encodeURIComponent(name)}/action`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action })
+        });
+        const data = await res.json();
+        if (!res.ok || data.ok === false) throw new Error(data.error || 'Não foi possível concluir a ação.');
+        notify('Comando enviado ao celular.');
+        gridSignature = null;
+        await loadDevices();
+        setTimeout(loadDevices, 1500);
+      } catch (err) { notify(err.message, true); }
+      finally { if (btn?.isConnected) { btn.disabled = false; btn.innerHTML = previous; } }
+    }
+
+    async function restartActiveRemote(btn) {
+      if (!activeRemoteDevice) return;
+      if (!confirm(`Deseja reiniciar ${activeRemoteDevice}?`)) return;
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin text-sm text-amber-400"></i><span>Reiniciar</span>`;
+      }
+      try {
+        await fetch(`/api/device/${activeRemoteDevice}/action`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'restart' })
+        });
+      } catch (e) {
+        console.error('Erro ao reiniciar:', e);
+      }
+      setTimeout(() => {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fas fa-rotate-right" style="color:#f6c776"></i><span>Reiniciar</span>`;
+        }
+        startRemoteStream();
+        loadDevices();
+      }, 3000);
+    }
+
+    async function launchScrcpy(name) {
+      await fetch(`/api/device/${name}/scrcpy`, { method: 'POST' });
+    }
+
+    function renderDeviceCard(dev) {
+      const isOnline = dev.running && dev.adb_online;
+      const stats = dev.stats || {};
+      const info = dev.info || {};
+      const proxy = escapeHtml(info.proxy || 'Direto');
+
+      return `
+        <article class="device-card glass" data-device="${dev.name}">
+          <div class="device-header"><div><h3 class="device-title">${dev.name}</h3><p class="device-meta font-mono">ADB :${dev.adb_port || '—'} · Android ${info.android || '13'}</p></div>
+            <span class="live-badge" style="${isOnline ? '' : 'color:#e0a1b2;border-color:#ef577630;background:#ef57760a'}">${isOnline ? 'Online' : dev.running ? 'Iniciando' : 'Offline'}</span>
+          </div>
+          <div class="device-preview">
+            ${isOnline ? `<button class="card-screen" onclick="openRemoteModal('${dev.name}')" aria-label="Controlar ${dev.name}"><img src="/api/device/${dev.name}/screen.jpg?t=${Date.now()}" alt="Tela de ${dev.name}"><span class="screen-overlay"><i class="fas fa-expand"></i></span></button>` : `<div class="card-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#596e90"><i class="fas fa-power-off" style="font-size:23px"></i><span style="font-size:9px">${dev.running ? 'Conectando...' : 'Desligado'}</span></div>`}
+          </div>
+          ${isOnline ? `<button onclick="openRemoteModal('${dev.name}')" class="btn btn-primary" style="width:100%"><i class="fas fa-mobile-screen"></i> Controlar celular <i class="fas fa-arrow-right" style="margin-left:auto;font-size:10px"></i></button>` : `<button onclick="containerAction('${dev.name}', '${dev.running ? 'restart' : 'start'}', this)" class="btn" style="width:100%"><i class="fas fa-${dev.running ? 'rotate-right' : 'play'}"></i> ${dev.running ? 'Reconectar celular' : 'Ligar celular'}</button>`}
+          <div class="device-info"><div><span>Aplicativo</span><strong data-info="app" title="${escapeHtml(info.top_app || '—')}">${escapeHtml(info.top_app || '—')}</strong></div><div><span>Conexão</span><strong data-info="proxy" style="color:#8eb9ff">${proxy}</strong></div><div><span>RAM / CPU</span><strong data-info="resources" class="font-mono">${(stats.mem_usage || '—').split('/')[0].trim()} · ${stats.cpu_pct || '0%'}</strong></div></div>
+          <div class="device-footer">
+            <button onclick="containerAction('${dev.name}', 'restart', this)" class="btn" style="flex:1" ${dev.running ? '' : 'disabled'}><i class="fas fa-rotate-right"></i> Reiniciar</button>
+            ${dev.running ? `<button onclick="containerAction('${dev.name}', 'stop', this)" class="btn btn-icon btn-danger" title="Desligar ${dev.name}" aria-label="Desligar ${dev.name}"><i class="fas fa-stop"></i></button>` : ''}
+            <button onclick="containerAction('${dev.name}', 'delete', this)" class="btn btn-icon btn-danger" title="Excluir ${dev.name}" aria-label="Excluir ${dev.name}"><i class="far fa-trash-can"></i></button>
+          </div>
+        </article>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+    }
+
+    function memoryMiB(value) {
+      const match = String(value || '').match(/^([\d.]+)\s*(GiB|MiB|KiB|GB|MB|kB|B)/i);
+      if (!match) return 0;
+      const factors = { gib: 1024, mib: 1, kib: 1 / 1024, gb: 1e9 / 1048576, mb: 1e6 / 1048576, kb: 1e3 / 1048576, b: 1 / 1048576 };
+      return parseFloat(match[1]) * factors[match[2].toLowerCase()];
+    }
+
+    function updateDeviceGrid() {
+      if (!$('modalRemote').classList.contains('hidden')) return;
+      const signature = JSON.stringify(devices.map(d => [d.name, d.running, d.adb_online, d.adb_port]));
+      if (signature !== gridSignature) {
+        $('devicesGrid').innerHTML = devices.length ? devices.map(renderDeviceCard).join('') : '<div class="empty-state"><i class="fas fa-mobile-screen"></i><h3>Sua frota começa aqui</h3><p>Crie seu primeiro celular Android com tela vertical 9:16.</p><button class="btn btn-primary" onclick="document.getElementById(\'btnNewPhone\').click()"><i class="fas fa-plus"></i> Criar celular</button></div>';
+        gridSignature = signature;
+        return;
+      }
+      // Keep existing previews and focused controls while fresh frames load.
+      for (const [index, card] of [...$('devicesGrid').querySelectorAll('.device-card')].entries()) {
+        const device = devices[index];
+        const info = device.info || {}, stats = device.stats || {};
+        card.querySelector('[data-info="app"]').textContent = info.top_app || '—';
+        card.querySelector('[data-info="app"]').title = info.top_app || '—';
+        card.querySelector('[data-info="proxy"]').textContent = info.proxy || 'Direto';
+        card.querySelector('[data-info="resources"]').textContent = `${(stats.mem_usage || '—').split('/')[0].trim()} · ${stats.cpu_pct || '0%'}`;
+        const image = card.querySelector('img');
+        if (!image || image.dataset.loading) continue;
+        image.dataset.loading = 'true';
+        const next = new Image();
+        next.onload = () => { image.src = next.src; delete image.dataset.loading; };
+        next.onerror = () => { delete image.dataset.loading; };
+        next.src = `/api/device/${encodeURIComponent(device.name)}/screen.jpg?t=${Date.now()}`;
+      }
+    }
+
+    async function loadDevices() {
+      if (devicesLoading) return;
+      devicesLoading = true;
+      try {
+        const res = await fetch('/api/devices');
+        if (!res.ok) throw new Error('Falha ao carregar os dispositivos.');
+        const data = await res.json();
+        devices = data.devices || [];
+        $('statTotal').textContent = data.total || 0;
+        $('statRunning').textContent = data.running || 0;
+        $('statNextPort').textContent = data.next_port || 5559;
+        const totalMem = devices.reduce((sum, device) => sum + memoryMiB(device.stats?.mem_usage), 0);
+        $('statRam').textContent = totalMem >= 1024 ? (totalMem / 1024).toFixed(1) + ' GiB' : totalMem.toFixed(0) + ' MiB';
+        updateDeviceGrid();
+      } catch (err) {
+        console.error('Erro ao carregar farm:', err);
+        if (!devices.length) $('devicesGrid').innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><h3>Não foi possível carregar a frota</h3><p>Verifique a conexão e clique em Atualizar para tentar novamente.</p></div>';
+      } finally { devicesLoading = false; }
+    }
+
+    $('btnRefresh').addEventListener('click', loadDevices);
+    loadDevices();
+    setInterval(loadDevices, 4000);
+  </script>
+</body>
+</html>
