@@ -88,6 +88,22 @@ No painel web, clique em **"Instalar APK"**, selecione o aplicativo e o containe
 
 ---
 
+## Documentação Técnica e Resolução de Problemas
+
+Consulte o guia completo com todas as causas raízes e soluções de arquitetura enfrentadas no projeto:
+- **[Guia Completo de Resolução e Configuração (PlayBots, GApps, Redroid e A20s)](docs/PLAYBOTS_TROUBLESHOOTING_GUIDE.md)**
+  - Suporte a BinderFS no host.
+  - Tradução de arquitetura x86_64 para ARM.
+  - Correção de Play Protect e GMS Compliance (`READ_DEVICE_CONFIG`, `READ_GSERVICES`).
+  - Resolução de intents do YouTube.
+  - Requisitos rígidos do PlayBots (som, relógio UTC, acessibilidade, background).
+  - Prevenção de pânico de kernel no hardware físico (Qualcomm Softdog).
+- **Templates de Configuração:**
+  - `templates/BotPrefs.template.xml`: modelo sanitizado para login automático no Seo-Fast.
+  - `templates/privapp-permissions-google.xml`: permissões privilegiadas para pacotes Google em `/system/priv-app`.
+
+---
+
 ## API REST
 
 - `GET /api/devices`: Retorna status de todos os containers, portas ADB e uso de CPU/RAM.

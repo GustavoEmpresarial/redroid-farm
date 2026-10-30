@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<map>
+    <boolean name="auto_login" value="true" />
+    <!-- Senha codificada em Base64 (ex: echo -n "sua_senha" | base64) -->
+    <string name="ultima_senha">SUA_SENHA_BASE64_AQUI</string>
+    <string name="ultimo_email">seu_email@dominio.com</string>
+</map>

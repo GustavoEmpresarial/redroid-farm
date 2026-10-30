@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<permissions>
+    <!-- Permissões de sistema para Google Services Framework -->
+    <privapp-permissions package="com.google.android.gsf">
+        <permission name="android.permission.READ_DEVICE_CONFIG"/>
+        <permission name="android.permission.WRITE_DEVICE_CONFIG"/>
+        <permission name="android.permission.INTERACT_ACROSS_USERS"/>
+        <permission name="android.permission.MANAGE_USERS"/>
+        <permission name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"/>
+        <permission name="android.permission.DUMP"/>
+    </privapp-permissions>
+
+    <!-- Permissões de sistema para Google Play Store oficial -->
+    <privapp-permissions package="com.android.vending">
+        <permission name="android.permission.MANAGE_USERS"/>
+        <permission name="android.permission.CREATE_USERS"/>
+        <permission name="android.permission.INTERACT_ACROSS_USERS"/>
+        <permission name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"/>
+        <permission name="android.permission.INSTALL_PACKAGES"/>
+        <permission name="android.permission.DELETE_PACKAGES"/>
+        <permission name="android.permission.PACKAGE_VERIFICATION_AGENT"/>
+        <permission name="android.permission.REAL_GET_TASKS"/>
+        <permission name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"/>
+        <permission name="android.permission.READ_DEVICE_CONFIG"/>
+        <permission name="android.permission.WRITE_DEVICE_CONFIG"/>
+    </privapp-permissions>
+
+    <!-- Permissões de sistema para Google Play Services -->
+    <privapp-permissions package="com.google.android.gms">
+        <permission name="android.permission.READ_DEVICE_CONFIG"/>
+        <permission name="android.permission.WRITE_DEVICE_CONFIG"/>
+        <permission name="android.permission.MANAGE_USERS"/>
+        <permission name="android.permission.INTERACT_ACROSS_USERS"/>
+        <permission name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"/>
+    </privapp-permissions>
+</permissions>
