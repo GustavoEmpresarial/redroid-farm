@@ -30,6 +30,7 @@ APKS_DIR.mkdir(parents=True, exist_ok=True)
 # Cache de capturas para limitar sobrecarga
 screen_cache: dict[str, tuple[float, bytes]] = {}
 screen_lock = threading.Lock()
+creation_lock = threading.Lock()
 
 
 def run_cmd(cmd: list[str], timeout: float = 15.0) -> tuple[int, str, str]:
@@ -88,6 +89,23 @@ def get_docker_containers() -> list[dict]:
             })
         except Exception:
             continue
+    missing_ports = [c for c in containers if c["adb_port"] is None]
+    if missing_ports:
+        code, details, _ = run_cmd(["docker", "inspect", *[c["id"] for c in missing_ports]], timeout=8)
+        if code == 0:
+            try:
+                bindings = {
+                    item["Id"]: item.get("HostConfig", {}).get("PortBindings", {}).get("5555/tcp") or []
+                    for item in json.loads(details)
+                }
+                for container in missing_ports:
+                    saved = next((ports for identifier, ports in bindings.items() if identifier.startswith(container["id"])), [])
+                    if saved and saved[0].get("HostPort"):
+                        port = int(saved[0]["HostPort"])
+                        container["adb_port"] = port
+                        container["adb_serial"] = f"127.0.0.1:{port}"
+            except (ValueError, KeyError, TypeError):
+                pass
     return sorted(containers, key=lambda x: x["name"])
 
 
@@ -115,13 +133,31 @@ def get_docker_stats() -> dict[str, dict]:
     return stats
 
 
-def get_next_available_port(start: int = 5556) -> int:
-    containers = get_docker_containers()
+def get_next_available_port(start: int = 5556, containers: list[dict] | None = None) -> int:
+    if containers is None:
+        containers = get_docker_containers()
     used_ports = {c["adb_port"] for c in containers if c.get("adb_port")}
     port = start
     while port in used_ports:
         port += 1
     return port
+
+
+def get_next_device_name(containers: list[dict]) -> str:
+    names = {c["name"] for c in containers}
+    number = 1
+    while f"redroid-phone-{number}" in names:
+        number += 1
+    return f"redroid-phone-{number}"
+
+
+def connect_in_background(port: int):
+    def connect():
+        for _ in range(20):
+            if ensure_device_connected(port):
+                return
+            time.sleep(1)
+    threading.Thread(target=connect, daemon=True).start()
 
 
 def get_device_info(adb_serial: str) -> dict:
@@ -254,6 +290,14 @@ class FarmHandler(BaseHTTPRequestHandler):
             self.wfile.write(data)
             return
 
+        if path == "/api/devices/defaults":
+            containers = get_docker_containers()
+            return self._json({
+                "ok": True,
+                "name": get_next_device_name(containers),
+                "port": get_next_available_port(containers=containers),
+            })
+
         if path == "/api/status" or path == "/api/devices":
             containers = get_docker_containers()
             stats = get_docker_stats()
@@ -281,7 +325,7 @@ class FarmHandler(BaseHTTPRequestHandler):
                 "devices": results,
                 "total": len(results),
                 "running": sum(1 for c in results if c["running"]),
-                "next_port": get_next_available_port(),
+                "next_port": get_next_available_port(containers=containers),
             }
             return self._json(payload)
 
@@ -381,52 +425,54 @@ class FarmHandler(BaseHTTPRequestHandler):
 
         # Criar novo celular Redroid
         if path == "/api/devices/create":
-            name = body.get("name") or f"redroid-phone-{len(get_docker_containers()) + 1}"
-            name = re.sub(r"[^a-zA-Z0-9_\-]", "", name)
-            port = int(body.get("port") or get_next_available_port())
-            width = int(body.get("width") or 720)
-            height = int(body.get("height") or 1280)
-            dpi = int(body.get("dpi") or 320)
-            gpu = body.get("gpu", "guest")
-            ram = body.get("ram", "")
-            cpus = body.get("cpus", "")
-
-            phone_data = DATA_DIR / name
-            phone_data.mkdir(parents=True, exist_ok=True)
-
-            cmd = [
-                "docker", "run", "-d",
-                "--name", name,
-                "--privileged",
-                "-v", "/dev/binderfs:/dev/binderfs",
-                "-v", f"{phone_data.resolve()}:/data",
-                "-p", f"{port}:5555",
-            ]
-            if ram:
-                cmd += ["--memory", ram]
-            if cpus:
-                cmd += ["--cpus", str(cpus)]
-
-            cmd += [
-                DOCKER_IMAGE,
-                f"androidboot.redroid_gpu_mode={gpu}",
-                f"androidboot.redroid_width={width}",
-                f"androidboot.redroid_height={height}",
-                f"androidboot.redroid_dpi={dpi}",
-            ]
-
-            code, out, err = run_cmd(cmd, timeout=30)
-            if code != 0:
-                return self._error(f"Failed to start container: {err}")
-
-            # Aguarda boot em background
-            def connect_bg():
-                for _ in range(20):
-                    time.sleep(1)
-                    if ensure_device_connected(port):
-                        break
-
-            threading.Thread(target=connect_bg, daemon=True).start()
+            # Serialize validation and creation so two submissions cannot reserve the same name/port.
+            with creation_lock:
+                containers = get_docker_containers()
+                name = body.get("name") or get_next_device_name(containers)
+                if not isinstance(name, str) or not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_-]*", name):
+                    return self._error("Use letters, numbers, underscores or hyphens for the device name.")
+                if any(c["name"] == name for c in containers):
+                    return self._error(f"A device named {name} already exists. Choose another name.", 409)
+                try:
+                    port = int(body.get("port") or get_next_available_port(containers=containers))
+                    width = int(body.get("width") or 720)
+                    height = int(body.get("height") or 1280)
+                    dpi = int(body.get("dpi") or 320)
+                except (TypeError, ValueError):
+                    return self._error("Port, resolution and density must be whole numbers.")
+                if not 1024 <= port <= 65535:
+                    return self._error("ADB port must be between 1024 and 65535.")
+                if any(c.get("adb_port") == port for c in containers):
+                    return self._error(f"ADB port {port} is reserved by another device, including powered-off devices.", 409)
+                if not (180 <= width <= 4320 and 320 <= height <= 7680 and 72 <= dpi <= 960):
+                    return self._error("Resolution or density is outside the supported range.")
+                if not Path("/dev/binderfs/binder").exists():
+                    return self._error("Android binder is unavailable. Run start-farm.sh to initialize the Android runtime.", 503)
+                gpu = body.get("gpu", "guest")
+                ram = body.get("ram", "")
+                cpus = body.get("cpus", "")
+                phone_data = DATA_DIR / name
+                phone_data.mkdir(parents=True, exist_ok=True)
+                cmd = [
+                    "docker", "run", "-d", "--name", name, "--privileged",
+                    "-v", "/dev/binderfs:/dev/binderfs",
+                    "-v", f"{phone_data.resolve()}:/data", "-p", f"{port}:5555",
+                ]
+                if ram:
+                    cmd += ["--memory", ram]
+                if cpus:
+                    cmd += ["--cpus", str(cpus)]
+                cmd += [
+                    DOCKER_IMAGE,
+                    f"androidboot.redroid_gpu_mode={gpu}",
+                    f"androidboot.redroid_width={width}",
+                    f"androidboot.redroid_height={height}",
+                    f"androidboot.redroid_dpi={dpi}",
+                ]
+                code, out, err = run_cmd(cmd, timeout=30)
+                if code != 0:
+                    return self._error(f"Failed to create device: {err or out}")
+            connect_in_background(port)
             return self._json({"ok": True, "name": name, "port": port, "id": out})
 
         # Ação em container individual (start, stop, restart, delete)
@@ -480,9 +526,21 @@ class FarmHandler(BaseHTTPRequestHandler):
             if action not in ("start", "stop", "restart"):
                 return self._error("Invalid action")
 
+            results = []
             for c in containers:
-                run_cmd(["docker", action, c["name"]], timeout=10)
-            return self._json({"ok": True, "action": action, "count": len(containers)})
+                cmd = ["docker", action]
+                if action in ("stop", "restart"):
+                    cmd += ["-t", "2"]
+                code, out, err = run_cmd([*cmd, c["name"]], timeout=20)
+                results.append({"name": c["name"], "ok": code == 0, "error": (err or out) if code != 0 else None})
+                if code == 0 and action in ("start", "restart") and c.get("adb_port"):
+                    connect_in_background(c["adb_port"])
+            failed = [r for r in results if not r["ok"]]
+            return self._json({
+                "ok": not failed, "action": action,
+                "count": sum(r["ok"] for r in results), "results": results,
+                "error": "; ".join(f"{r['name']}: {r['error']}" for r in failed) if failed else None,
+            }, status=502 if failed else 200)
 
         # Envio de toque ou tecla (Touch Input / Key Event)
         m = re.match(r"^/api/device/([^/]+)/input$", path)

@@ -230,18 +230,19 @@
         <button onclick="closeModal('modalNewPhone')" class="btn btn-icon" aria-label="Close new device dialog">&times;</button>
       </div>
       <form id="formNewPhone" class="mt-4 space-y-4">
+        <p id="newPhoneError" class="hidden text-xs text-rose-300" role="alert"></p>
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Device name</label>
-          <input type="text" id="inputPhoneName" class="field" required placeholder="redroid-phone-4">
+          <input type="text" id="inputPhoneName" class="field" pattern="[a-zA-Z0-9][a-zA-Z0-9_-]*" required placeholder="redroid-phone-4">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">External ADB port</label>
-            <input type="number" id="inputPhonePort" class="field" required value="5559">
+            <input type="number" id="inputPhonePort" class="field" min="1024" max="65535" required value="5559">
           </div>
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Density (DPI)</label>
-            <input type="number" id="inputPhoneDpi" class="field" value="320">
+            <input type="number" id="inputPhoneDpi" class="field" min="72" max="960" value="320">
           </div>
         </div>
         <div>
@@ -257,7 +258,7 @@
         <div class="resolution-note"><i class="fas fa-mobile-screen"></i><span>9:16 portrait screen<br><small style="color:#8199be">The display preserves the original aspect ratio without distortion.</small></span></div>
         <div class="pt-2 flex justify-end gap-2">
           <button type="button" onclick="closeModal('modalNewPhone')" class="btn">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create and start</button>
+          <button id="btnCreatePhone" type="submit" class="btn btn-primary">Create and start</button>
         </div>
       </form>
     </div>
@@ -298,6 +299,7 @@
     let remoteReturnFocus = null;
     let toastTimer = null;
     let devicesLoading = false;
+    let devicesRefreshPending = false;
     let gridSignature = null;
     const $ = (id) => document.getElementById(id);
 
@@ -317,6 +319,32 @@
       toast.classList.remove('hidden');
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toast.classList.add('hidden'), 4000);
+    }
+
+    async function apiRequest(url, payload) {
+      const options = payload === undefined ? {} : {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      };
+      const response = await fetch(url, options);
+      let data;
+      try { data = await response.json(); }
+      catch { throw new Error(`The server returned an invalid response (${response.status}).`); }
+      if (!response.ok || data.ok === false) throw new Error(data.error || `Request failed (${response.status}).`);
+      return data;
+    }
+
+    function setButtonBusy(button, busy, text = '') {
+      if (busy) {
+        button.dataset.originalHtml = button.innerHTML;
+        button.disabled = true;
+        button.setAttribute('aria-busy', 'true');
+        button.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i>' + (text ? ` ${text}` : '');
+      } else {
+        button.disabled = false;
+        button.removeAttribute('aria-busy');
+        if (button.dataset.originalHtml !== undefined) button.innerHTML = button.dataset.originalHtml;
+        delete button.dataset.originalHtml;
+      }
     }
 
     async function remoteRequest(endpoint, payload) {
@@ -493,12 +521,27 @@
     // ----------------------------------------------------
     // CARDS & CRUD DE CELULARES
     // ----------------------------------------------------
-    $('btnNewPhone').addEventListener('click', () => {
-      fetch('/api/devices').then(r => r.json()).then(d => {
-        $('inputPhonePort').value = d.next_port || 5559;
-        $('inputPhoneName').value = `redroid-phone-${(d.devices || []).length + 1}`;
-        openModal('modalNewPhone');
-      });
+    $('btnNewPhone').addEventListener('click', async () => {
+      if ($('btnNewPhone').disabled) return;
+      $('btnNewPhone').disabled = true;
+      const usedNames = new Set(devices.map(device => device.name));
+      const usedPorts = new Set(devices.map(device => device.adb_port));
+      let number = 1, port = 5556;
+      while (usedNames.has(`redroid-phone-${number}`)) number++;
+      while (usedPorts.has(port)) port++;
+      const initialName = `redroid-phone-${number}`;
+      $('inputPhoneName').value = initialName;
+      $('inputPhonePort').value = port;
+      $('newPhoneError').classList.add('hidden');
+      openModal('modalNewPhone');
+      setButtonBusy($('btnCreatePhone'), true, 'Loading...');
+      $('inputPhoneName').focus();
+      try {
+        const defaults = await apiRequest('/api/devices/defaults');
+        if ($('inputPhoneName').value === initialName) $('inputPhoneName').value = defaults.name;
+        if (Number($('inputPhonePort').value) === port) $('inputPhonePort').value = defaults.port;
+      } catch (error) { notify(error.message || 'Unable to load device defaults.', true); }
+      finally { setButtonBusy($('btnCreatePhone'), false); $('btnNewPhone').disabled = false; }
     });
 
     $('btnInstallApkModal').addEventListener('click', async () => {
@@ -514,22 +557,30 @@
       openModal('modalInstallApk');
     });
 
-    $('formNewPhone').addEventListener('submit', async (e) => {
+    $('formNewPhone').addEventListener('submit', async e => {
       e.preventDefault();
+      const button = $('btnCreatePhone');
+      if (button.disabled) return;
       const payload = {
-        name: $('inputPhoneName').value,
-        port: parseInt($('inputPhonePort').value),
-        width: parseInt($('inputPhoneWidth').value),
-        height: parseInt($('inputPhoneHeight').value),
-        dpi: parseInt($('inputPhoneDpi').value)
+        name: $('inputPhoneName').value.trim(),
+        port: Number($('inputPhonePort').value),
+        width: Number($('inputPhoneWidth').value),
+        height: Number($('inputPhoneHeight').value),
+        dpi: Number($('inputPhoneDpi').value)
       };
-      closeModal('modalNewPhone');
-      await fetch('/api/devices/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      loadDevices();
+      $('newPhoneError').classList.add('hidden');
+      setButtonBusy(button, true, 'Creating...');
+      $('btnNewPhone').disabled = true;
+      try {
+        const data = await apiRequest('/api/devices/create', payload);
+        closeModal('modalNewPhone');
+        notify(`${data.name} created. Android is starting.`);
+        gridSignature = null;
+        await loadDevices();
+      } catch (error) {
+        $('newPhoneError').textContent = error.message || 'Unable to create the device.';
+        $('newPhoneError').classList.remove('hidden');
+      } finally { setButtonBusy(button, false); $('btnNewPhone').disabled = false; }
     });
 
     $('formInstallApk').addEventListener('submit', async (e) => {
@@ -559,14 +610,27 @@
       loadDevices();
     });
 
-    $('btnStartAll').addEventListener('click', async () => {
-      await fetch('/api/devices/all/action', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'start' }) });
-      loadDevices();
-    });
-    $('btnStopAll').addEventListener('click', async () => {
-      await fetch('/api/devices/all/action', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'stop' }) });
-      loadDevices();
-    });
+    async function runFleetAction(action) {
+      const startButton = $('btnStartAll'), stopButton = $('btnStopAll');
+      if (startButton.disabled || stopButton.disabled) return;
+      const button = action === 'start' ? startButton : stopButton;
+      const other = action === 'start' ? stopButton : startButton;
+      setButtonBusy(button, true);
+      other.disabled = true;
+      notify(action === 'start' ? 'Starting all devices...' : 'Stopping all devices...');
+      try {
+        const data = await apiRequest('/api/devices/all/action', { action });
+        notify(data.count ? `${action === 'start' ? 'Started' : 'Stopped'} ${data.count} device${data.count === 1 ? '' : 's'}.` : 'There are no devices in your fleet.');
+      } catch (error) { notify(error.message || 'Unable to update the devices.', true); }
+      finally {
+        setButtonBusy(button, false);
+        other.disabled = false;
+        gridSignature = null;
+        await loadDevices();
+      }
+    }
+    $('btnStartAll').addEventListener('click', () => runFleetAction('start'));
+    $('btnStopAll').addEventListener('click', () => runFleetAction('stop'));
 
     async function containerAction(name, action, btn) {
       if (action === 'delete' && !confirm(`Permanently delete container ${name}?`)) return;
@@ -678,7 +742,7 @@
     }
 
     async function loadDevices() {
-      if (devicesLoading) return;
+      if (devicesLoading) { devicesRefreshPending = true; return; }
       devicesLoading = true;
       try {
         const res = await fetch('/api/devices');
@@ -694,7 +758,10 @@
       } catch (err) {
         console.error('Failed to load the farm:', err);
         if (!devices.length) $('devicesGrid').innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><h3>Unable to load the fleet</h3><p>Check your connection and click Refresh to try again.</p></div>';
-      } finally { devicesLoading = false; }
+      } finally {
+        devicesLoading = false;
+        if (devicesRefreshPending) { devicesRefreshPending = false; loadDevices(); }
+      }
     }
 
     $('btnRefresh').addEventListener('click', loadDevices);
