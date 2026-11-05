@@ -245,7 +245,7 @@ class FarmHandler(BaseHTTPRequestHandler):
         if path in ("/", "/index.html"):
             index_file = ROOT / "index.html"
             if not index_file.is_file():
-                return self.send_error(404, "index.html nao encontrado")
+                return self.send_error(404, "index.html not found")
             data = index_file.read_bytes()
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -292,7 +292,7 @@ class FarmHandler(BaseHTTPRequestHandler):
             containers = {c["name"]: c for c in get_docker_containers()}
             c = containers.get(name)
             if not c or not c.get("adb_serial"):
-                return self.send_error(404, "Dispositivo offline")
+                return self.send_error(404, "Device offline")
 
             png_bytes = capture_screenshot(c["adb_serial"])
             if not png_bytes:
@@ -317,11 +317,11 @@ class FarmHandler(BaseHTTPRequestHandler):
             containers = {c["name"]: c for c in get_docker_containers()}
             c = containers.get(name)
             if not c or not c.get("adb_serial"):
-                return self.send_error(404, "Dispositivo offline")
+                return self.send_error(404, "Device offline")
 
             jpg_bytes = capture_screenshot_jpeg(c["adb_serial"], quality=75)
             if not jpg_bytes:
-                return self.send_error(500, "Erro ao capturar frame")
+                return self.send_error(500, "Failed to capture screen frame")
 
             self.send_response(200)
             self.send_header("Content-Type", "image/jpeg")
@@ -338,7 +338,7 @@ class FarmHandler(BaseHTTPRequestHandler):
             containers = {c["name"]: c for c in get_docker_containers()}
             c = containers.get(name)
             if not c or not c.get("adb_serial"):
-                return self.send_error(404, "Dispositivo offline")
+                return self.send_error(404, "Device offline")
 
             ser = c["adb_serial"]
             self.send_response(200)
@@ -417,7 +417,7 @@ class FarmHandler(BaseHTTPRequestHandler):
 
             code, out, err = run_cmd(cmd, timeout=30)
             if code != 0:
-                return self._error(f"Erro ao iniciar container: {err}")
+                return self._error(f"Failed to start container: {err}")
 
             # Aguarda boot em background
             def connect_bg():
@@ -435,7 +435,7 @@ class FarmHandler(BaseHTTPRequestHandler):
             name = m.group(1)
             action = body.get("action")
             if action not in ("start", "stop", "restart", "delete"):
-                return self._error("Acao invalida")
+                return self._error("Invalid action")
 
             containers = {c["name"]: c for c in get_docker_containers()}
             c = containers.get(name)
@@ -470,7 +470,7 @@ class FarmHandler(BaseHTTPRequestHandler):
                     threading.Thread(target=connect_on_start, args=(c["adb_port"],), daemon=True).start()
 
             if code != 0:
-                return self._error(f"Erro ao {action}: {err}")
+                return self._error(f"Failed to {action}: {err}")
             return self._json({"ok": True, "name": name, "action": action})
 
         # Ação global em todos os containers redroid
@@ -478,7 +478,7 @@ class FarmHandler(BaseHTTPRequestHandler):
             action = body.get("action")
             containers = get_docker_containers()
             if action not in ("start", "stop", "restart"):
-                return self._error("Acao invalida")
+                return self._error("Invalid action")
 
             for c in containers:
                 run_cmd(["docker", action, c["name"]], timeout=10)
@@ -491,7 +491,7 @@ class FarmHandler(BaseHTTPRequestHandler):
             containers = {c["name"]: c for c in get_docker_containers()}
             c = containers.get(name)
             if not c or not c.get("adb_serial"):
-                return self._error("Dispositivo nao encontrado ou sem adb")
+                return self._error("Device not found or ADB unavailable")
 
             ser = c["adb_serial"]
             act = body.get("action")
@@ -543,7 +543,7 @@ class FarmHandler(BaseHTTPRequestHandler):
             containers = {c["name"]: c for c in get_docker_containers()}
             c = containers.get(name)
             if not c or not c.get("adb_serial"):
-                return self._error("Dispositivo nao conectado")
+                return self._error("Device not connected")
 
             ser = c["adb_serial"]
             title = f"Redroid - {name}"
@@ -560,11 +560,11 @@ class FarmHandler(BaseHTTPRequestHandler):
             apk_name = body.get("apk_name")
             target = body.get("target", "all")
             if not apk_name:
-                return self._error("apk_name obrigatorio")
+                return self._error("apk_name is required")
 
             apk_path = APKS_DIR / apk_name
             if not apk_path.is_file():
-                return self._error("Arquivo APK nao encontrado no servidor")
+                return self._error("APK file not found on the server")
 
             containers = get_docker_containers()
             if target != "all":
@@ -619,7 +619,7 @@ settings put global auto_time 1 2>/dev/null || true
             containers = {c["name"]: c for c in get_docker_containers()}
             c = containers.get(name)
             if not c or not c.get("adb_serial"):
-                return self._error("Dispositivo offline")
+                return self._error("Device offline")
 
             ser = c["adb_serial"]
             proxy_val = body.get("proxy", "").strip()
@@ -634,7 +634,7 @@ settings put global auto_time 1 2>/dev/null || true
 
 def main():
     server = ThreadingHTTPServer((HOST, PORT), FarmHandler)
-    print(f"Redroid Farm Dashboard rodando em http://127.0.0.1:{PORT}")
+    print(f"Redroid Farm Dashboard running at http://127.0.0.1:{PORT}")
     server.serve_forever()
 
 

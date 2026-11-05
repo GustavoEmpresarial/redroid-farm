@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Redroid Farm · Celulares Virtuais Android 13</title>
+  <title>Redroid Farm · Android 13 Virtual Devices</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,9 +38,7 @@
     .brand-subtitle { font-size: 10px; color: #7d90b1; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
     .header-actions { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
     .dashboard { max-width: 1320px; margin: auto; padding: 32px 28px; }
-    .overview-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
     .eyebrow { color: #77a9ff; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.8px; }
-    .overview-heading h1 { margin: 5px 0 6px; font-size: clamp(24px, 3vw, 32px); font-weight: 700; letter-spacing: -1.1px; }
     .muted { color: #899ab7; font-size: 12px; }
     .live-badge { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; border: 1px solid #46d7a52b; border-radius: 30px; background: #37d59c0a; color: #77e4bd; font-size: 10px; font-weight: 700; padding: 7px 11px; }
     .live-badge::before { content: ''; width: 6px; height: 6px; border-radius: 100%; background: currentColor; box-shadow: 0 0 8px #46d7a560; }
@@ -79,12 +77,10 @@
     .stage-heading { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 3px; }
     .stage-heading .eyebrow { color: #91a6ca; font-size: 9px; letter-spacing: 1.6px; }
     .aspect-badge { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #9cc3ff; background: #3984ff15; border: 1px solid #3984ff30; padding: 4px 9px; border-radius: 7px; }
-    /* The 9:16 stream already includes Android's navigation bar. */
-    .remote-phone-frame { width: min(calc((100dvh - 136px) * 9 / 16 + 16px), 44vw, 480px); background: linear-gradient(145deg, #263550, #10192b); padding: 7px; border: 1px solid #52658380; border-radius: 27px; box-shadow: inset 0 1px 0 #ffffff20, 0 28px 70px #00000065, 0 0 70px #3984ff0d; }
+    /* Both the outer frame and the Android stream keep the 9:16 ratio. */
+    .remote-phone-frame { width: min(calc((100dvh - 108px) * 9 / 16), 44vw, 480px); aspect-ratio: 9 / 16; background: linear-gradient(145deg, #263550, #10192b); padding: 14.222222px 8px; border: 0; border-radius: 27px; box-shadow: inset 0 0 0 1px #52658380, inset 0 1px 0 #ffffff20, 0 28px 70px #00000065, 0 0 70px #3984ff0d; }
     .remote-phone-screen { width: 100%; aspect-ratio: 9 / 16; background: #000; border-radius: 20px; overflow: hidden; position: relative; cursor: crosshair; user-select: none; touch-action: none; outline: none; }
-    .remote-phone-screen:focus { box-shadow: 0 0 0 2px #3984ff inset; }
     .remote-phone-screen img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: block; }
-    .stage-hint { color: #7085a7; font-size: 10px; display: flex; align-items: center; gap: 6px; }
     .control-panel { width: 358px; max-height: calc(100dvh - 48px); overflow-y: auto; padding: 22px; border-radius: 22px; background: linear-gradient(150deg, #192641, #101a2f 75%); border: 1px solid #32435e; box-shadow: inset 0 1px 0 #ffffff06, 0 24px 60px #00000040; scrollbar-width: thin; scrollbar-color: #344564 transparent; }
     .panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; border-bottom: 1px solid #ffffff0b; padding-bottom: 17px; margin-bottom: 17px; }
     .panel-header .eyebrow { margin-bottom: 8px; font-size: 9px; }
@@ -137,16 +133,13 @@
       .dashboard { padding: 26px 18px; }
       .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
       .stat-card { padding: 14px; } .stat-icon { display: none; }
-      .overview-heading { align-items: flex-start; } .overview-heading > .live-badge { margin-top: 6px; }
-      .overview-heading .muted { max-width: 220px; line-height: 1.6; }
       #modalRemote { align-items: flex-start; padding: 20px 14px; }
       .remote-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; width: 100%; max-width: 440px; }
       .remote-stage { width: 100%; }
       .remote-mobile-close { display: flex; position: fixed; top: 10px; right: 10px; z-index: 2; width: 34px; min-height: 34px; background: #172640; }
       .stage-heading { max-width: 350px; }
-      .remote-phone-frame { width: min(calc((100dvh - 129px) * 9 / 16 + 16px), 100%, 350px); }
+      .remote-phone-frame { width: min(calc((100dvh - 100px) * 9 / 16), 100%, 350px); }
       .control-panel { width: 100%; max-height: none; padding: 20px; }
-      .stage-hint { font-size: 9px; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
   </style>
@@ -156,80 +149,75 @@
     <div class="header-inner">
       <div class="brand">
         <div class="brand-icon"><i class="fab fa-android" aria-hidden="true"></i></div>
-        <div><div class="brand-name">redroid<span>farm</span><span style="color:#7791b7;font-size:10px;margin-left:8px;letter-spacing:0">/ 13</span></div><div class="brand-subtitle">Seu centro de controle Android</div></div>
+        <div><div class="brand-name">redroid<span>farm</span><span style="color:#7791b7;font-size:10px;margin-left:8px;letter-spacing:0">/ 13</span></div><div class="brand-subtitle">Your Android control center</div></div>
       </div>
       <div class="header-actions">
-        <button id="btnInstallApkModal" class="btn"><i class="fas fa-box"></i> Instalar APK</button>
-        <button id="btnSetupAllPlaybots" class="btn"><i class="fas fa-robot"></i> Config. PlayBots</button>
-        <button id="btnStartAll" class="btn btn-icon" title="Ligar todos" aria-label="Ligar todos"><i class="fas fa-play" style="color:#74dfb5"></i></button>
-        <button id="btnStopAll" class="btn btn-icon btn-danger" title="Desligar todos" aria-label="Desligar todos"><i class="fas fa-stop"></i></button>
-        <button id="btnNewPhone" class="btn btn-primary"><i class="fas fa-plus"></i> Novo celular</button>
+        <button id="btnInstallApkModal" class="btn"><i class="fas fa-box"></i> Install APK</button>
+        <button id="btnSetupAllPlaybots" class="btn"><i class="fas fa-robot"></i> PlayBots setup</button>
+        <button id="btnStartAll" class="btn btn-icon" title="Start all devices" aria-label="Start all devices"><i class="fas fa-play" style="color:#74dfb5"></i></button>
+        <button id="btnStopAll" class="btn btn-icon btn-danger" title="Stop all devices" aria-label="Stop all devices"><i class="fas fa-stop"></i></button>
+        <button id="btnNewPhone" class="btn btn-primary"><i class="fas fa-plus"></i> New device</button>
       </div>
     </div>
   </header>
   <main class="dashboard">
-    <div class="overview-heading">
-      <div><div class="eyebrow">Workspace / Visão geral</div><h1>Sua frota, sob controle.</h1><p class="muted">Acompanhe e controle seus celulares em um só lugar.</p></div>
-      <span class="live-badge">Atualização ao vivo</span>
-    </div>
     <div class="stats-grid">
-      <div class="stat-card glass"><div><div class="stat-label">Total de celulares</div><div id="statTotal" class="stat-value">—</div><div class="stat-note">Na sua frota</div></div><div class="stat-icon"><i class="fas fa-layer-group"></i></div></div>
-      <div class="stat-card glass"><div><div class="stat-label">Celulares ligados</div><div id="statRunning" class="stat-value" style="color:#76e4b9">—</div><div class="stat-note">Containers em execução</div></div><div class="stat-icon" style="color:#76e4b9;background:#37d59c0c;border-color:#37d59c20"><i class="fas fa-signal"></i></div></div>
-      <div class="stat-card glass"><div><div class="stat-label">Memória em uso</div><div id="statRam" class="stat-value">—</div><div class="stat-note">Consumo total de RAM</div></div><div class="stat-icon"><i class="fas fa-microchip"></i></div></div>
-      <div class="stat-card glass"><div><div class="stat-label">Próxima porta ADB</div><div id="statNextPort" class="stat-value font-mono" style="color:#80b4ff">—</div><div class="stat-note">Disponível para novo celular</div></div><div class="stat-icon"><i class="fas fa-plug"></i></div></div>
+      <div class="stat-card glass"><div><div class="stat-label">Total devices</div><div id="statTotal" class="stat-value">—</div><div class="stat-note">In your fleet</div></div><div class="stat-icon"><i class="fas fa-layer-group"></i></div></div>
+      <div class="stat-card glass"><div><div class="stat-label">Running devices</div><div id="statRunning" class="stat-value" style="color:#76e4b9">—</div><div class="stat-note">Running containers</div></div><div class="stat-icon" style="color:#76e4b9;background:#37d59c0c;border-color:#37d59c20"><i class="fas fa-signal"></i></div></div>
+      <div class="stat-card glass"><div><div class="stat-label">Memory usage</div><div id="statRam" class="stat-value">—</div><div class="stat-note">Total RAM usage</div></div><div class="stat-icon"><i class="fas fa-microchip"></i></div></div>
+      <div class="stat-card glass"><div><div class="stat-label">Next ADB port</div><div id="statNextPort" class="stat-value font-mono" style="color:#80b4ff">—</div><div class="stat-note">Available for a new device</div></div><div class="stat-icon"><i class="fas fa-plug"></i></div></div>
     </div>
-    <div class="fleet-heading"><div><h2>Meus celulares</h2><p class="muted" style="font-size:10px;margin-top:4px">Visualização vertical · 9:16</p></div><button id="btnRefresh" class="btn" style="min-height:35px;font-size:10px"><i class="fas fa-rotate"></i> Atualizar</button></div>
-    <div id="devicesGrid" aria-live="polite"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Carregando seus celulares...</p></div></div>
+    <div class="fleet-heading"><div><h2>My devices</h2><p class="muted" style="font-size:10px;margin-top:4px">Portrait view · 9:16</p></div><button id="btnRefresh" class="btn" style="min-height:35px;font-size:10px"><i class="fas fa-rotate"></i> Refresh</button></div>
+    <div id="devicesGrid" aria-live="polite"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading your devices...</p></div></div>
   </main>
 
   <!-- ======================================================== -->
   <!-- MODAL DE CONTROLE REMOTO INTERATIVO (A TELINHA AO VIVO) -->
   <!-- ======================================================== -->
   <div id="modalRemote" class="fixed inset-0 z-50 hidden flex items-center justify-center overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="remoteTitle" tabindex="-1">
-    <button onclick="closeRemoteModal()" class="btn btn-icon remote-mobile-close" aria-label="Fechar visualização" title="Fechar controle remoto"><i class="fas fa-xmark"></i></button>
+    <button onclick="closeRemoteModal()" class="btn btn-icon remote-mobile-close" aria-label="Close viewer" title="Close remote control"><i class="fas fa-xmark"></i></button>
     <div class="remote-layout">
       <div class="remote-stage">
-        <div class="stage-heading"><span class="eyebrow"><i class="fas fa-mobile-screen" style="margin-right:6px"></i> Controle remoto</span><span class="aspect-badge">9:16</span></div>
+        <div class="stage-heading"><span class="eyebrow"><i class="fas fa-mobile-screen" style="margin-right:6px"></i> Remote control</span><span class="aspect-badge">9:16</span></div>
         <div id="remotePhoneFrame" class="remote-phone-frame">
-          <div id="remoteScreen" class="remote-phone-screen" aria-label="Tela do Android: toque, arraste ou digite diretamente" tabindex="0">
-            <img id="remoteImg" alt="Tela ao vivo do Android" draggable="false">
+          <div id="remoteScreen" class="remote-phone-screen" aria-label="Android screen: tap or drag to interact">
+            <img id="remoteImg" alt="Live Android screen" draggable="false">
           </div>
         </div>
-        <div class="stage-hint"><i class="fas fa-keyboard" style="color:#7bb8ff"></i> Teclado do PC ativo · Digite e cole com Ctrl+V diretamente <span id="remoteResolution" class="font-mono" style="margin-left:8px">720 × 1280</span></div>
       </div>
-      <aside class="control-panel" aria-label="Controles do celular">
+      <aside class="control-panel" aria-label="Device controls">
         <div class="panel-header">
-          <div><div class="eyebrow">Dispositivo conectado</div><h2 id="remoteTitle">redroid-phone-1</h2><span id="remotePortLbl" class="font-mono">127.0.0.1:5556</span><div id="streamState" class="stream-state" role="status" style="margin-top:10px">Conectando à tela...</div></div>
-          <button id="btnCloseRemote" onclick="closeRemoteModal()" class="btn btn-icon" style="width:32px;min-height:32px;border-radius:10px" title="Fechar (Esc)" aria-label="Fechar controle remoto"><i class="fas fa-xmark"></i></button>
+          <div><div class="eyebrow">Connected device</div><h2 id="remoteTitle">redroid-phone-1</h2><span id="remotePortLbl" class="font-mono">127.0.0.1:5556</span><div id="streamState" class="stream-state" role="status" style="margin-top:10px">Connecting to screen...</div></div>
+          <button id="btnCloseRemote" onclick="closeRemoteModal()" class="btn btn-icon" style="width:32px;min-height:32px;border-radius:10px" title="Close (Esc)" aria-label="Close remote control"><i class="fas fa-xmark"></i></button>
         </div>
-        <section class="panel-section"><label for="remoteDeviceSelect" class="field-label">DISPOSITIVO</label><select id="remoteDeviceSelect" onchange="switchRemoteDevice(this.value)" class="field"></select></section>
+        <section class="panel-section"><label for="remoteDeviceSelect" class="field-label">DEVICE</label><select id="remoteDeviceSelect" onchange="switchRemoteDevice(this.value)" class="field"></select></section>
         <section class="panel-section">
-          <label for="remoteTextInput" class="field-label">ENVIAR TEXTO</label>
-          <div class="input-row"><input type="text" id="remoteTextInput" placeholder="Digite aqui para enviar ao celular" class="field" autocomplete="off"><button onclick="sendRemoteText()" class="btn btn-primary btn-icon" title="Enviar texto" aria-label="Enviar texto"><i class="fas fa-paper-plane"></i></button></div>
-          <p class="field-help">Selecione um campo no Android e pressione Enter para enviar.</p>
+          <label for="remoteTextInput" class="field-label">SEND TEXT</label>
+          <div class="input-row"><input type="text" id="remoteTextInput" placeholder="Type text to send to the device" class="field" autocomplete="off"><button onclick="sendRemoteText()" class="btn btn-primary btn-icon" title="Send text" aria-label="Send text"><i class="fas fa-paper-plane"></i></button></div>
+          <p class="field-help">Select a field on Android, then press Enter to send.</p>
         </section>
         <section class="panel-section">
-          <label for="remoteProxyInput" class="field-label">CONEXÃO PROXY</label>
-          <div class="input-row"><input type="text" id="remoteProxyInput" placeholder="IP:porta · ex. 192.168.1.100:8080" class="field font-mono" style="font-size:10px" autocomplete="off"><button onclick="saveRemoteProxy()" class="btn btn-icon" title="Aplicar proxy" aria-label="Aplicar proxy"><i class="fas fa-check" style="color:#7bb8ff"></i></button><button onclick="clearRemoteProxy()" class="btn btn-icon btn-danger" title="Remover proxy" aria-label="Remover proxy"><i class="fas fa-ban"></i></button></div>
+          <label for="remoteProxyInput" class="field-label">PROXY CONNECTION</label>
+          <div class="input-row"><input type="text" id="remoteProxyInput" placeholder="IP:port · e.g. 192.168.1.100:8080" class="field font-mono" style="font-size:10px" autocomplete="off"><button onclick="saveRemoteProxy()" class="btn btn-icon" title="Apply proxy" aria-label="Apply proxy"><i class="fas fa-check" style="color:#7bb8ff"></i></button><button onclick="clearRemoteProxy()" class="btn btn-icon btn-danger" title="Remove proxy" aria-label="Remove proxy"><i class="fas fa-ban"></i></button></div>
         </section>
-        <section class="panel-section"><h3 class="field-label">CONTROLES RÁPIDOS</h3>
+        <section class="panel-section"><h3 class="field-label">QUICK CONTROLS</h3>
           <div class="control-grid">
-            <button onclick="sendRemoteKey(26)" class="control-key" title="Ligar ou desligar a tela"><i class="fas fa-power-off" style="color:#ff93ac"></i><span>Tela</span></button>
-            <button onclick="sendRemoteKey(24)" class="control-key" title="Aumentar volume"><i class="fas fa-volume-high" style="color:#79b6ff"></i><span>Vol +</span></button>
-            <button onclick="sendRemoteKey(25)" class="control-key" title="Diminuir volume"><i class="fas fa-volume-low" style="color:#79b6ff"></i><span>Vol −</span></button>
-            <button onclick="sendRemoteKey(82)" class="control-key" title="Abrir menu"><i class="fas fa-bars"></i><span>Menu</span></button>
-            <button onclick="restartActiveRemote(this)" class="control-key" title="Reiniciar celular"><i class="fas fa-rotate-right" style="color:#f6c776"></i><span>Reiniciar</span></button>
+            <button onclick="sendRemoteKey(26)" class="control-key" title="Toggle display power"><i class="fas fa-power-off" style="color:#ff93ac"></i><span>Display</span></button>
+            <button onclick="sendRemoteKey(24)" class="control-key" title="Volume up"><i class="fas fa-volume-high" style="color:#79b6ff"></i><span>Vol +</span></button>
+            <button onclick="sendRemoteKey(25)" class="control-key" title="Volume down"><i class="fas fa-volume-low" style="color:#79b6ff"></i><span>Vol −</span></button>
+            <button onclick="sendRemoteKey(82)" class="control-key" title="Open menu"><i class="fas fa-bars"></i><span>Menu</span></button>
+            <button onclick="restartActiveRemote(this)" class="control-key" title="Restart device"><i class="fas fa-rotate-right" style="color:#f6c776"></i><span>Restart</span></button>
           </div>
         </section>
-        <section class="panel-section"><h3 class="field-label">SEUS APLICATIVOS</h3>
+        <section class="panel-section"><h3 class="field-label">YOUR APPS</h3>
           <div class="app-grid">
-            <button onclick="launchApp('google_account')" class="app-shortcut"><span class="app-icon"><i class="fab fa-google"></i></span><span><strong>Conta Google</strong><small>Entrar ou trocar</small></span></button>
-            <button onclick="launchApp('youtube')" class="app-shortcut"><span class="app-icon" style="color:#ff718f;background:#ff577812"><i class="fab fa-youtube"></i></span><span><strong>YouTube</strong><small>Abrir aplicativo</small></span></button>
-            <button onclick="launchApp('com.playzero.playbotsseofast/.LoginLicencaActivity')" class="app-shortcut"><span class="app-icon" style="color:#f6cc79;background:#f6cc7910"><i class="fas fa-robot"></i></span><span><strong>PlayBots</strong><small>Tela inicial</small></span></button>
-            <button onclick="launchApp('com.android.settings/.Settings')" class="app-shortcut"><span class="app-icon" style="color:#a9b9d5;background:#a9b9d510"><i class="fas fa-gear"></i></span><span><strong>Ajustes</strong><small>Configurar Android</small></span></button>
+            <button onclick="launchApp('google_account')" class="app-shortcut"><span class="app-icon"><i class="fab fa-google"></i></span><span><strong>Google account</strong><small>Sign in or switch</small></span></button>
+            <button onclick="launchApp('youtube')" class="app-shortcut"><span class="app-icon" style="color:#ff718f;background:#ff577812"><i class="fab fa-youtube"></i></span><span><strong>YouTube</strong><small>Open app</small></span></button>
+            <button onclick="launchApp('com.playzero.playbotsseofast/.LoginLicencaActivity')" class="app-shortcut"><span class="app-icon" style="color:#f6cc79;background:#f6cc7910"><i class="fas fa-robot"></i></span><span><strong>PlayBots</strong><small>Home screen</small></span></button>
+            <button onclick="launchApp('com.android.settings/.Settings')" class="app-shortcut"><span class="app-icon" style="color:#a9b9d5;background:#a9b9d510"><i class="fas fa-gear"></i></span><span><strong>Settings</strong><small>Android settings</small></span></button>
           </div>
         </section>
-        <div class="panel-footer"><button onclick="launchScrcpy(activeRemoteDevice)" class="btn"><i class="fas fa-arrow-up-right-from-square" style="color:#89b7ff"></i> Abrir janela nativa <span style="color:#7189ad;font-size:9px">scrcpy</span></button></div>
+        <div class="panel-footer"><button onclick="launchScrcpy(activeRemoteDevice)" class="btn"><i class="fas fa-arrow-up-right-from-square" style="color:#89b7ff"></i> Open native window <span style="color:#7189ad;font-size:9px">scrcpy</span></button></div>
       </aside>
     </div>
   </div>
@@ -238,64 +226,64 @@
   <div id="modalNewPhone" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="glass p-6 rounded-2xl w-full max-w-md border border-blue-500/20 shadow-2xl">
       <div class="flex items-center justify-between pb-4 border-b border-white/10">
-        <h3 class="font-bold text-white text-base">Novo celular Android 13</h3>
-        <button onclick="closeModal('modalNewPhone')" class="btn btn-icon" aria-label="Fechar novo celular">&times;</button>
+        <h3 class="font-bold text-white text-base">New Android 13 device</h3>
+        <button onclick="closeModal('modalNewPhone')" class="btn btn-icon" aria-label="Close new device dialog">&times;</button>
       </div>
       <form id="formNewPhone" class="mt-4 space-y-4">
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Nome do Dispositivo</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Device name</label>
           <input type="text" id="inputPhoneName" class="field" required placeholder="redroid-phone-4">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Porta ADB Externa</label>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">External ADB port</label>
             <input type="number" id="inputPhonePort" class="field" required value="5559">
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Densidade (DPI)</label>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Density (DPI)</label>
             <input type="number" id="inputPhoneDpi" class="field" value="320">
           </div>
         </div>
         <div>
-          <label for="inputPhoneResolution" class="field-label">RESOLUÇÃO · FORMATO 9:16</label>
+          <label for="inputPhoneResolution" class="field-label">RESOLUTION · 9:16 FORMAT</label>
           <select id="inputPhoneResolution" class="field" onchange="setPhoneResolution(this.value)">
-            <option value="540x960">540 × 960 · Leve</option>
-            <option value="720x1280" selected>720 × 1280 · HD (recomendado)</option>
+            <option value="540x960">540 × 960 · Lightweight</option>
+            <option value="720x1280" selected>720 × 1280 · HD (recommended)</option>
             <option value="1080x1920">1080 × 1920 · Full HD</option>
           </select>
           <input type="hidden" id="inputPhoneWidth" value="720">
           <input type="hidden" id="inputPhoneHeight" value="1280">
         </div>
-        <div class="resolution-note"><i class="fas fa-mobile-screen"></i><span>Tela vertical 9:16<br><small style="color:#8199be">A visualização preserva a proporção original, sem distorção.</small></span></div>
+        <div class="resolution-note"><i class="fas fa-mobile-screen"></i><span>9:16 portrait screen<br><small style="color:#8199be">The display preserves the original aspect ratio without distortion.</small></span></div>
         <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="closeModal('modalNewPhone')" class="btn">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Criar e Iniciar</button>
+          <button type="button" onclick="closeModal('modalNewPhone')" class="btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create and start</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Instalar APK -->
+  <!-- Modal Install APK -->
   <div id="modalInstallApk" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="glass p-6 rounded-2xl w-full max-w-md border border-sky-500/20 shadow-2xl">
       <div class="flex items-center justify-between pb-4 border-b border-white/10">
-        <h3 class="font-bold text-white text-base">Instalar APK nos Celulares</h3>
-        <button onclick="closeModal('modalInstallApk')" class="btn btn-icon" aria-label="Fechar instalação de APK">&times;</button>
+        <h3 class="font-bold text-white text-base">Install APK on Devices</h3>
+        <button onclick="closeModal('modalInstallApk')" class="btn btn-icon" aria-label="Close APK installation">&times;</button>
       </div>
       <form id="formInstallApk" class="mt-4 space-y-4">
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Escolha o APK (pasta apks/)</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Choose an APK (apks/ folder)</label>
           <select id="selectApkName" class="field"></select>
         </div>
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Destino</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Target</label>
           <select id="selectApkTarget" class="field">
-            <option value="all">Todos os Celulares Online</option>
+            <option value="all">All online devices</option>
           </select>
         </div>
         <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="closeModal('modalInstallApk')" class="btn">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Instalar Agora</button>
+          <button type="button" onclick="closeModal('modalInstallApk')" class="btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Install now</button>
         </div>
       </form>
     </div>
@@ -338,9 +326,9 @@
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
         });
         const data = await res.json();
-        if (!res.ok || data.ok === false) throw new Error(data.error || 'Não foi possível concluir o comando.');
+        if (!res.ok || data.ok === false) throw new Error(data.error || 'Unable to complete the command.');
         return true;
-      } catch (err) { notify(err.message || 'Falha na conexão com o celular.', true); return false; }
+      } catch (err) { notify(err.message || 'Unable to connect to the device.', true); return false; }
     }
 
     // ----------------------------------------------------
@@ -352,10 +340,10 @@
       const dev = devices.find(d => d.name === name);
       $('remoteTitle').textContent = name;
       $('remotePortLbl').textContent = dev ? `127.0.0.1:${dev.adb_port}` : '';
-      
+
       const sel = $('remoteDeviceSelect');
-      sel.innerHTML = devices.map(d => `<option value="${d.name}" ${d.name === name ? 'selected' : ''}>${d.name} (Porta ${d.adb_port})</option>`).join('');
-      
+      sel.innerHTML = devices.map(d => `<option value="${d.name}" ${d.name === name ? 'selected' : ''}>${d.name} (Port ${d.adb_port})</option>`).join('');
+
       const currentProxy = (dev && dev.info) ? dev.info.proxy : '';
       $('remoteProxyInput').value = currentProxy || '';
 
@@ -389,8 +377,8 @@
       const name = activeRemoteDevice;
       const img = $('remoteImg');
       img.removeAttribute('src');
-      $('streamState').textContent = 'Conectando à tela...';
-      $('remoteResolution').textContent = '—';
+      $('streamState').textContent = 'Connecting to screen...';
+
       function isCurrent() { return generation === streamGeneration && name === activeRemoteDevice && !$('modalRemote').classList.contains('hidden'); }
       function updateFrame() {
         if (!isCurrent()) return;
@@ -398,14 +386,14 @@
         nextImg.onload = () => {
           if (!isCurrent()) return;
           img.src = nextImg.src;
-          $('remoteResolution').textContent = `${nextImg.naturalWidth} × ${nextImg.naturalHeight}`;
-          $('streamState').textContent = '● Tela ao vivo';
+
+          $('streamState').textContent = '● Live screen';
           $('streamState').style.color = '#77e4bd';
           remoteStreamTimer = setTimeout(updateFrame, 100);
         };
         nextImg.onerror = () => {
           if (!isCurrent()) return;
-          $('streamState').textContent = 'Reconectando à tela...';
+          $('streamState').textContent = 'Reconnecting to screen...';
           $('streamState').style.color = '#f6cc79';
           remoteStreamTimer = setTimeout(updateFrame, 1000);
         };
@@ -439,7 +427,6 @@
       const point = screenPoint(e);
       if (!point) return;
       e.preventDefault();
-      screenEl.focus();
       gesture = { ...point, time: Date.now(), id: e.pointerId, device: activeRemoteDevice };
       screenEl.setPointerCapture(e.pointerId);
       const rect = screenEl.getBoundingClientRect();
@@ -466,96 +453,15 @@
     });
     screenEl.addEventListener('pointercancel', () => { gesture = null; });
     screenEl.addEventListener('lostpointercapture', () => { gesture = null; });
-    // Teclas especiais mapeadas para Android Keycodes
-    const specialKeyMap = {
-      'Backspace': 67,  // KEYCODE_DEL
-      'Delete': 112,    // KEYCODE_FORWARD_DEL
-      'Enter': 66,      // KEYCODE_ENTER
-      'Tab': 61,        // KEYCODE_TAB
-      'ArrowLeft': 21,  // KEYCODE_DPAD_LEFT
-      'ArrowRight': 22, // KEYCODE_DPAD_RIGHT
-      'ArrowUp': 19,    // KEYCODE_DPAD_UP
-      'ArrowDown': 20,  // KEYCODE_DPAD_DOWN
-    };
-
-    // Colar da área de transferência do PC (Ctrl+V)
-    document.addEventListener('paste', async (e) => {
-      if ($('modalRemote').classList.contains('hidden') || !activeRemoteDevice) return;
-      if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
-      e.preventDefault();
-      const text = e.clipboardData ? e.clipboardData.getData('text') : '';
-      if (text) {
-        await remoteRequest('input', { action: 'paste', text });
-        notify('Texto colado no celular!');
-      }
-    });
-
-    // Digitação direta do teclado do PC no Android
-    document.addEventListener('keydown', async (e) => {
-      if ($('modalRemote').classList.contains('hidden') || !activeRemoteDevice) return;
-
-      // Se o usuário está digitando em campos de formulário locais (ex: input manual ou proxy)
-      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
-        if (e.key === 'Escape') { e.preventDefault(); closeRemoteModal(); }
-        return;
-      }
-
-      // Atalhos com Ctrl / Cmd
-      if (e.ctrlKey || e.metaKey) {
-        const k = e.key.toLowerCase();
-        if (k === 'v') {
-          e.preventDefault();
-          try {
-            const text = await navigator.clipboard.readText();
-            if (text) {
-              await remoteRequest('input', { action: 'paste', text });
-              notify('Texto colado no celular!');
-            }
-          } catch (err) {
-            // Em navegadores restritos, o listener 'paste' acima cuida do evento
-          }
-          return;
-        }
-        if (k === 'c') {
-          e.preventDefault();
-          await sendRemoteKey(278); // KEYCODE_COPY
-          return;
-        }
-        if (k === 'a') {
-          e.preventDefault();
-          await remoteRequest('input', { action: 'key', keycode: '29 --meta 4096' }); // Ctrl+A
-          return;
-        }
-        if (k === 'x') {
-          e.preventDefault();
-          await sendRemoteKey(277); // KEYCODE_CUT
-          return;
-        }
-        return;
-      }
-
-      // Tecla Escape: Shift+Esc fecha modal, Esc normal envia Voltar (Back) ao Android
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        if (e.shiftKey) {
-          closeRemoteModal();
-        } else {
-          await sendRemoteKey(4); // KEYCODE_BACK
-        }
-        return;
-      }
-
-      // Teclas de navegação e controle
-      if (specialKeyMap[e.key]) {
-        e.preventDefault();
-        await sendRemoteKey(specialKeyMap[e.key]);
-        return;
-      }
-
-      // Caracteres imprimíveis normais (letras, números, acentos, pontuação, espaço)
-      if (e.key.length === 1 && !e.altKey) {
-        e.preventDefault();
-        await remoteRequest('input', { action: 'text', text: e.key });
+    // Keyboard shortcuts only manage the panel; typing is sent through the text field.
+    document.addEventListener('keydown', e => {
+      if ($('modalRemote').classList.contains('hidden')) return;
+      if (e.key === 'Escape') { e.preventDefault(); closeRemoteModal(); return; }
+      if (e.key === 'Tab') {
+        const controls = [...$('modalRemote').querySelectorAll('button, input, select')].filter(el => !el.disabled && el.getClientRects().length);
+        const first = controls[0], last = controls[controls.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     });
 
@@ -569,7 +475,7 @@
       if (!text || !activeRemoteDevice) return;
       if (await remoteRequest('input', { action: 'text', text })) {
         input.value = '';
-        notify('Texto enviado ao celular.');
+        notify('Text sent to the device.');
       }
     }
     $('remoteTextInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendRemoteText(); });
@@ -577,7 +483,7 @@
     async function saveRemoteProxy() {
       const proxy = $('remoteProxyInput').value.trim();
       if (await remoteRequest('proxy', { proxy })) {
-        notify(proxy ? 'Proxy aplicado ao celular.' : 'Proxy removido. Conexão direta ativada.');
+        notify(proxy ? 'Proxy applied to the device.' : 'Proxy removed. Direct connection enabled.');
         loadDevices();
       }
     }
@@ -600,11 +506,11 @@
       const data = await res.json();
       const sel = $('selectApkName');
       sel.innerHTML = (data.apks || []).map(a => `<option value="${a}">${a}</option>`).join('');
-      
+
       const targetSel = $('selectApkTarget');
-      targetSel.innerHTML = '<option value="all">Todos os Celulares Online</option>' + 
-        devices.filter(d => d.running).map(d => `<option value="${d.name}">${d.name} (Porta ${d.adb_port})</option>`).join('');
-      
+      targetSel.innerHTML = '<option value="all">All online devices</option>' +
+        devices.filter(d => d.running).map(d => `<option value="${d.name}">${d.name} (Port ${d.adb_port})</option>`).join('');
+
       openModal('modalInstallApk');
     });
 
@@ -633,7 +539,7 @@
         target: $('selectApkTarget').value
       };
       closeModal('modalInstallApk');
-      alert('Instalação iniciada em segundo plano!');
+      alert('Installation started in the background!');
       await fetch('/api/apks/install', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -643,13 +549,13 @@
     });
 
     $('btnSetupAllPlaybots').addEventListener('click', async () => {
-      if (!confirm('Deseja configurar permissões do PlayBots (Acessibilidade, Sobreposição, Áudio, Bateria) em todos os celulares?')) return;
+      if (!confirm('Configure PlayBots permissions (accessibility, overlay, audio, battery) on all devices?')) return;
       await fetch('/api/devices/setup_playbots', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ target: 'all' })
       });
-      alert('Permissões aplicadas com sucesso!');
+      alert('Permissions applied successfully!');
       loadDevices();
     });
 
@@ -663,7 +569,7 @@
     });
 
     async function containerAction(name, action, btn) {
-      if (action === 'delete' && !confirm(`Excluir permanentemente o container ${name}?`)) return;
+      if (action === 'delete' && !confirm(`Permanently delete container ${name}?`)) return;
       const previous = btn?.innerHTML;
       if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
       try {
@@ -671,8 +577,8 @@
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action })
         });
         const data = await res.json();
-        if (!res.ok || data.ok === false) throw new Error(data.error || 'Não foi possível concluir a ação.');
-        notify('Comando enviado ao celular.');
+        if (!res.ok || data.ok === false) throw new Error(data.error || 'Unable to complete the action.');
+        notify('Command sent to the device.');
         gridSignature = null;
         await loadDevices();
         setTimeout(loadDevices, 1500);
@@ -682,10 +588,10 @@
 
     async function restartActiveRemote(btn) {
       if (!activeRemoteDevice) return;
-      if (!confirm(`Deseja reiniciar ${activeRemoteDevice}?`)) return;
+      if (!confirm(`Restart ${activeRemoteDevice}?`)) return;
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = `<i class="fas fa-spinner fa-spin text-sm text-amber-400"></i><span>Reiniciar</span>`;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin text-sm text-amber-400"></i><span>Restart</span>`;
       }
       try {
         await fetch(`/api/device/${activeRemoteDevice}/action`, {
@@ -694,12 +600,12 @@
           body: JSON.stringify({ action: 'restart' })
         });
       } catch (e) {
-        console.error('Erro ao reiniciar:', e);
+        console.error('Failed to restart:', e);
       }
       setTimeout(() => {
         if (btn) {
           btn.disabled = false;
-          btn.innerHTML = `<i class="fas fa-rotate-right" style="color:#f6c776"></i><span>Reiniciar</span>`;
+          btn.innerHTML = `<i class="fas fa-rotate-right" style="color:#f6c776"></i><span>Restart</span>`;
         }
         startRemoteStream();
         loadDevices();
@@ -714,22 +620,22 @@
       const isOnline = dev.running && dev.adb_online;
       const stats = dev.stats || {};
       const info = dev.info || {};
-      const proxy = escapeHtml(info.proxy || 'Direto');
+      const proxy = escapeHtml(info.proxy || 'Direct');
 
       return `
         <article class="device-card glass" data-device="${dev.name}">
           <div class="device-header"><div><h3 class="device-title">${dev.name}</h3><p class="device-meta font-mono">ADB :${dev.adb_port || '—'} · Android ${info.android || '13'}</p></div>
-            <span class="live-badge" style="${isOnline ? '' : 'color:#e0a1b2;border-color:#ef577630;background:#ef57760a'}">${isOnline ? 'Online' : dev.running ? 'Iniciando' : 'Offline'}</span>
+            <span class="live-badge" style="${isOnline ? '' : 'color:#e0a1b2;border-color:#ef577630;background:#ef57760a'}">${isOnline ? 'Online' : dev.running ? 'Starting' : 'Offline'}</span>
           </div>
           <div class="device-preview">
-            ${isOnline ? `<button class="card-screen" onclick="openRemoteModal('${dev.name}')" aria-label="Controlar ${dev.name}"><img src="/api/device/${dev.name}/screen.jpg?t=${Date.now()}" alt="Tela de ${dev.name}"><span class="screen-overlay"><i class="fas fa-expand"></i></span></button>` : `<div class="card-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#596e90"><i class="fas fa-power-off" style="font-size:23px"></i><span style="font-size:9px">${dev.running ? 'Conectando...' : 'Desligado'}</span></div>`}
+            ${isOnline ? `<button class="card-screen" onclick="openRemoteModal('${dev.name}')" aria-label="Control ${dev.name}"><img src="/api/device/${dev.name}/screen.jpg?t=${Date.now()}" alt="Screen of ${dev.name}"><span class="screen-overlay"><i class="fas fa-expand"></i></span></button>` : `<div class="card-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#596e90"><i class="fas fa-power-off" style="font-size:23px"></i><span style="font-size:9px">${dev.running ? 'Connecting...' : 'Powered off'}</span></div>`}
           </div>
-          ${isOnline ? `<button onclick="openRemoteModal('${dev.name}')" class="btn btn-primary" style="width:100%"><i class="fas fa-mobile-screen"></i> Controlar celular <i class="fas fa-arrow-right" style="margin-left:auto;font-size:10px"></i></button>` : `<button onclick="containerAction('${dev.name}', '${dev.running ? 'restart' : 'start'}', this)" class="btn" style="width:100%"><i class="fas fa-${dev.running ? 'rotate-right' : 'play'}"></i> ${dev.running ? 'Reconectar celular' : 'Ligar celular'}</button>`}
-          <div class="device-info"><div><span>Aplicativo</span><strong data-info="app" title="${escapeHtml(info.top_app || '—')}">${escapeHtml(info.top_app || '—')}</strong></div><div><span>Conexão</span><strong data-info="proxy" style="color:#8eb9ff">${proxy}</strong></div><div><span>RAM / CPU</span><strong data-info="resources" class="font-mono">${(stats.mem_usage || '—').split('/')[0].trim()} · ${stats.cpu_pct || '0%'}</strong></div></div>
+          ${isOnline ? `<button onclick="openRemoteModal('${dev.name}')" class="btn btn-primary" style="width:100%"><i class="fas fa-mobile-screen"></i> Control device <i class="fas fa-arrow-right" style="margin-left:auto;font-size:10px"></i></button>` : `<button onclick="containerAction('${dev.name}', '${dev.running ? 'restart' : 'start'}', this)" class="btn" style="width:100%"><i class="fas fa-${dev.running ? 'rotate-right' : 'play'}"></i> ${dev.running ? 'Reconnect device' : 'Start device'}</button>`}
+          <div class="device-info"><div><span>App</span><strong data-info="app" title="${escapeHtml(info.top_app || '—')}">${escapeHtml(info.top_app || '—')}</strong></div><div><span>Connection</span><strong data-info="proxy" style="color:#8eb9ff">${proxy}</strong></div><div><span>RAM / CPU</span><strong data-info="resources" class="font-mono">${(stats.mem_usage || '—').split('/')[0].trim()} · ${stats.cpu_pct || '0%'}</strong></div></div>
           <div class="device-footer">
-            <button onclick="containerAction('${dev.name}', 'restart', this)" class="btn" style="flex:1" ${dev.running ? '' : 'disabled'}><i class="fas fa-rotate-right"></i> Reiniciar</button>
-            ${dev.running ? `<button onclick="containerAction('${dev.name}', 'stop', this)" class="btn btn-icon btn-danger" title="Desligar ${dev.name}" aria-label="Desligar ${dev.name}"><i class="fas fa-stop"></i></button>` : ''}
-            <button onclick="containerAction('${dev.name}', 'delete', this)" class="btn btn-icon btn-danger" title="Excluir ${dev.name}" aria-label="Excluir ${dev.name}"><i class="far fa-trash-can"></i></button>
+            <button onclick="containerAction('${dev.name}', 'restart', this)" class="btn" style="flex:1" ${dev.running ? '' : 'disabled'}><i class="fas fa-rotate-right"></i> Restart</button>
+            ${dev.running ? `<button onclick="containerAction('${dev.name}', 'stop', this)" class="btn btn-icon btn-danger" title="Stop ${dev.name}" aria-label="Stop ${dev.name}"><i class="fas fa-stop"></i></button>` : ''}
+            <button onclick="containerAction('${dev.name}', 'delete', this)" class="btn btn-icon btn-danger" title="Delete ${dev.name}" aria-label="Delete ${dev.name}"><i class="far fa-trash-can"></i></button>
           </div>
         </article>`;
     }
@@ -749,7 +655,7 @@
       if (!$('modalRemote').classList.contains('hidden')) return;
       const signature = JSON.stringify(devices.map(d => [d.name, d.running, d.adb_online, d.adb_port]));
       if (signature !== gridSignature) {
-        $('devicesGrid').innerHTML = devices.length ? devices.map(renderDeviceCard).join('') : '<div class="empty-state"><i class="fas fa-mobile-screen"></i><h3>Sua frota começa aqui</h3><p>Crie seu primeiro celular Android com tela vertical 9:16.</p><button class="btn btn-primary" onclick="document.getElementById(\'btnNewPhone\').click()"><i class="fas fa-plus"></i> Criar celular</button></div>';
+        $('devicesGrid').innerHTML = devices.length ? devices.map(renderDeviceCard).join('') : '<div class="empty-state"><i class="fas fa-mobile-screen"></i><h3>Your fleet starts here</h3><p>Create your first Android device with a 9:16 portrait screen.</p><button class="btn btn-primary" onclick="document.getElementById(\'btnNewPhone\').click()"><i class="fas fa-plus"></i> Create device</button></div>';
         gridSignature = signature;
         return;
       }
@@ -759,7 +665,7 @@
         const info = device.info || {}, stats = device.stats || {};
         card.querySelector('[data-info="app"]').textContent = info.top_app || '—';
         card.querySelector('[data-info="app"]').title = info.top_app || '—';
-        card.querySelector('[data-info="proxy"]').textContent = info.proxy || 'Direto';
+        card.querySelector('[data-info="proxy"]').textContent = info.proxy || 'Direct';
         card.querySelector('[data-info="resources"]').textContent = `${(stats.mem_usage || '—').split('/')[0].trim()} · ${stats.cpu_pct || '0%'}`;
         const image = card.querySelector('img');
         if (!image || image.dataset.loading) continue;
@@ -776,7 +682,7 @@
       devicesLoading = true;
       try {
         const res = await fetch('/api/devices');
-        if (!res.ok) throw new Error('Falha ao carregar os dispositivos.');
+        if (!res.ok) throw new Error('Unable to load devices.');
         const data = await res.json();
         devices = data.devices || [];
         $('statTotal').textContent = data.total || 0;
@@ -786,8 +692,8 @@
         $('statRam').textContent = totalMem >= 1024 ? (totalMem / 1024).toFixed(1) + ' GiB' : totalMem.toFixed(0) + ' MiB';
         updateDeviceGrid();
       } catch (err) {
-        console.error('Erro ao carregar farm:', err);
-        if (!devices.length) $('devicesGrid').innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><h3>Não foi possível carregar a frota</h3><p>Verifique a conexão e clique em Atualizar para tentar novamente.</p></div>';
+        console.error('Failed to load the farm:', err);
+        if (!devices.length) $('devicesGrid').innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><h3>Unable to load the fleet</h3><p>Check your connection and click Refresh to try again.</p></div>';
       } finally { devicesLoading = false; }
     }
 

@@ -3,14 +3,14 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-echo "[*] Verificando modulo binder_linux no kernel..."
+echo "[*] Checking the binder_linux kernel module..."
 if ! lsmod | grep -q binder_linux; then
-  echo "[+] Carregando modulo binder_linux..."
+  echo "[+] Loading binder_linux..."
   docker run --rm --privileged -v /lib/modules:/lib/modules ubuntu:latest sh -c \
     "apt-get update -qq && apt-get install -y -qq kmod >/dev/null && modprobe binder_linux devices=binder,hwbinder,vndbinder" || true
 fi
 
-echo "[*] Verificando ponto de montagem binderfs..."
+echo "[*] Checking the binderfs mount point..."
 if [ ! -c /dev/binderfs/binder ]; then
   docker run --rm --privileged -v /dev:/dev:rshared ubuntu:latest sh -c \
     "mkdir -p /dev/binderfs && mount -t binder binder /dev/binderfs 2>/dev/null || true; chmod 777 /dev/binderfs /dev/binderfs/* 2>/dev/null || true" || true
@@ -19,7 +19,7 @@ fi
 fuser -k 8768/tcp 2>/dev/null || pkill -f 'redroid-farm/server.py' 2>/dev/null || true
 sleep 0.5
 
-echo "[*] Iniciando containers redroid..."
+echo "[*] Starting Redroid containers..."
 for c in $(docker ps -a --filter "name=redroid" --format "{{.Names}}"); do
   docker start "$c" 2>/dev/null || true
 done

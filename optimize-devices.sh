@@ -36,17 +36,17 @@ BLOAT_PACKAGES=(
 for port in $PORTS; do
   ser="127.0.0.1:$port"
   echo "=========================================================="
-  echo "[*] Otimizando container na porta $port ($ser)..."
+  echo "[*] Optimizing container on port $port ($ser)..."
   echo "=========================================================="
 
   # 1. Debloat: desativa apps desnecessários
-  echo "[+] Desativando bloatware (Câmera, Galeria, Contatos, Música, Bluetooth)..."
+  echo "[+] Disabling bloatware (Camera, Gallery, Contacts, Music, Bluetooth)..."
   for pkg in "${BLOAT_PACKAGES[@]}"; do
     adb -s "$ser" shell "pm disable-user --user 0 $pkg 2>/dev/null" || true
   done
 
   # 2. Desempenho do sistema e animações zero
-  echo "[+] Ajustando animações para 0x e otimizando render..."
+  echo "[+] Disabling animations and optimizing rendering..."
   adb -s "$ser" shell "
     settings put global window_animation_scale 0
     settings put global transition_animation_scale 0
@@ -60,7 +60,7 @@ for port in $PORTS; do
   "
 
   # 3. Permissões completas e prioridade máxima para PlayBots e YouTube
-  echo "[+] Configurando permissões de alta prioridade para PlayBots e YouTube..."
+  echo "[+] Configuring high-priority permissions for PlayBots and YouTube..."
   adb -s "$ser" shell "
     appops set com.playzero.playbotsseofast SYSTEM_ALERT_WINDOW allow
     appops set com.playzero.playbotsseofast WRITE_SETTINGS allow
@@ -96,8 +96,8 @@ for port in $PORTS; do
     su 0 sh -c 'echo 3 > /proc/sys/vm/drop_caches' 2>/dev/null || true
   "
 
-  echo "[✓] Container na porta $port otimizado com sucesso!"
+  echo "[✓] Container on port $port optimized successfully!"
 done
 
 echo ""
-echo "[+] Concluído! Todos os containers estão com bloatware desativado e PlayBots liso."
+echo "[+] Done! Bloatware is disabled and PlayBots is optimized on all containers."
