@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="620" viewBox="0 0 1440 620" role="img" aria-labelledby="title desc">
+  <title id="title">Redroid Farm architecture</title>
+  <desc id="desc">The browser communicates with a Python API on port 8768. The API uses the Docker CLI for lifecycle operations and ADB for screen capture and input. Three Android 13 containers use host ADB ports 5556, 5557 and 5558, binderfs and persistent data directories.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#111d33"/><stop offset="1" stop-color="#0a1120"/></linearGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0l8 4-8 4z" fill="#6ca7ff"/></marker>
+    <marker id="green" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0l8 4-8 4z" fill="#68cfa8"/></marker>
+  </defs>
+  <rect x="1" y="1" width="1438" height="618" rx="24" fill="url(#bg)" stroke="#2a3e5c"/>
+  <g font-family="DejaVu Sans,Arial,sans-serif">
+    <text x="44" y="52" fill="#7aabef" font-size="12" font-weight="700" letter-spacing="3">HOW IT FITS TOGETHER</text>
+    <text x="44" y="93" fill="#eef4ff" font-size="27" font-weight="700">A small control plane. A flexible Android fleet.</text>
+    <rect x="44" y="184" width="286" height="186" rx="18" fill="#15253f" stroke="#3d5a82"/>
+    <text x="68" y="221" fill="#80b4ff" font-size="11" font-weight="700" letter-spacing="2">01 / BROWSER</text>
+    <text x="68" y="262" fill="#eef4ff" font-size="24" font-weight="700">Web dashboard</text>
+    <text x="68" y="295" fill="#a7bad5" font-size="14">9:16 live JPEG frames</text>
+    <text x="68" y="320" fill="#a7bad5" font-size="14">Tap, swipe and manual text input</text>
+    <text x="68" y="345" fill="#a7bad5" font-size="14">Fleet actions and RAM / CPU</text>
+    <rect x="456" y="184" width="342" height="186" rx="18" fill="#172c4b" stroke="#4a77b4"/>
+    <text x="480" y="221" fill="#80b4ff" font-size="11" font-weight="700" letter-spacing="2">02 / CONTROL PLANE</text>
+    <text x="480" y="262" fill="#eef4ff" font-size="24" font-weight="700">Python HTTP API</text>
+    <text x="480" y="295" fill="#a7bad5" font-size="14">ThreadingHTTPServer + Pillow</text>
+    <text x="480" y="320" fill="#a7bad5" font-size="14">Device creation and port allocation</text>
+    <text x="480" y="345" fill="#a7bad5" font-size="14">Screen capture and input commands</text>
+    <path d="M342 277h102" fill="none" stroke="#6ca7ff" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <text x="393" y="246" fill="#9ebceb" font-size="12" text-anchor="middle">HTTP</text>
+    <text x="393" y="316" fill="#9ebceb" font-size="12" text-anchor="middle">:8768</text>
+    <rect x="954" y="132" width="442" height="342" rx="18" fill="#101f33" stroke="#3d5a82"/>
+    <text x="978" y="171" fill="#80b4ff" font-size="11" font-weight="700" letter-spacing="2">03 / LINUX HOST</text>
+    <text x="978" y="205" fill="#eef4ff" font-size="23" font-weight="700">Docker + Android 13</text>
+    <g fill="#1a2f4d" stroke="#3a567b"><rect x="978" y="231" width="122" height="142" rx="12"/><rect x="1114" y="231" width="122" height="142" rx="12"/><rect x="1250" y="231" width="122" height="142" rx="12"/></g>
+    <g fill="#a5caff" font-size="16" font-weight="700" text-anchor="middle"><text x="1039" y="269">Phone 1</text><text x="1175" y="269">Phone 2</text><text x="1311" y="269">Phone 3</text></g>
+    <g fill="#a5b9d7" font-size="12" text-anchor="middle"><text x="1039" y="302">ADB :5556</text><text x="1175" y="302">ADB :5557</text><text x="1311" y="302">ADB :5558</text><text x="1039" y="343">container :5555</text><text x="1175" y="343">container :5555</text><text x="1311" y="343">container :5555</text></g>
+    <rect x="978" y="395" width="394" height="50" rx="10" fill="#12332f" stroke="#326256"/>
+    <text x="1175" y="426" fill="#8edcc0" font-size="14" text-anchor="middle">binder_linux + /dev/binderfs</text>
+    <path d="M810 246h132" stroke="#6ca7ff" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+    <text x="876" y="222" fill="#9ebceb" font-size="12" text-anchor="middle">Docker CLI</text>
+    <path d="M810 320h132" stroke="#6ca7ff" stroke-width="2" fill="none" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <text x="876" y="351" fill="#9ebceb" font-size="12" text-anchor="middle">ADB</text>
+    <rect x="456" y="471" width="342" height="99" rx="15" fill="#112b2b" stroke="#326256"/>
+    <text x="480" y="505" fill="#8edcc0" font-size="17" font-weight="700">Persistent device data</text>
+    <text x="480" y="538" fill="#a3c9bd" font-size="14">data/&lt;device-name&gt; → /data</text>
+    <path d="M1175 485v36H812" fill="none" stroke="#68cfa8" stroke-width="2" marker-end="url(#green)"/>
+    <text x="992" y="550" fill="#8bbfae" font-size="12" text-anchor="middle">bind mounts</text>
+    <text x="44" y="598" fill="#6f86a7" font-size="12">Each device keeps its own ADB port and data directory, including while powered off.</text>
+  </g>
+</svg>

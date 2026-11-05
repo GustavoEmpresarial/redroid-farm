@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="460" viewBox="0 0 1440 460" role="img" aria-labelledby="title desc">
+  <title id="title">Redroid Farm — Your Android fleet. One control center.</title>
+  <desc id="desc">A blue control-center banner with three illustrated Android devices and badges for Android 13, Docker, Linux and 9:16.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101e38"/><stop offset="1" stop-color="#070e1e"/></linearGradient>
+    <linearGradient id="blue" x2=".8" y2="1"><stop stop-color="#65adff"/><stop offset="1" stop-color="#2867ef"/></linearGradient>
+    <linearGradient id="phone" x2="1" y2="1"><stop stop-color="#273f64"/><stop offset="1" stop-color="#101b30"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#327fff" stop-opacity=".24"/><stop offset="1" stop-color="#327fff" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#7ba9ff" stroke-opacity=".055"/></pattern>
+    <symbol id="device" viewBox="0 0 180 320">
+      <rect x="1" y="1" width="178" height="318" rx="24" fill="url(#phone)" stroke="#749ad6" stroke-opacity=".5"/>
+      <rect x="9" y="15" width="162" height="288" rx="17" fill="#0b1426"/>
+      <rect x="67" y="22" width="46" height="4" rx="2" fill="#445d82"/>
+      <rect x="23" y="46" width="134" height="58" rx="12" fill="url(#blue)"/>
+      <rect x="35" y="60" width="56" height="5" rx="2.5" fill="#fff" opacity=".75"/>
+      <rect x="35" y="74" width="91" height="13" rx="4" fill="#fff" opacity=".92"/>
+      <rect x="23" y="116" width="62" height="64" rx="10" fill="#172b48" stroke="#31496a"/>
+      <rect x="95" y="116" width="62" height="64" rx="10" fill="#172b48" stroke="#31496a"/>
+      <path d="M34 162v-14h7v14m6 0v-24h7v24m6 0v-33h7v33" fill="#71b2ff"/>
+      <path d="M106 161l10-14 9 5 19-21" fill="none" stroke="#66dcb1" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="23" y="192" width="134" height="39" rx="10" fill="#1c304f"/>
+      <circle cx="38" cy="211" r="4" fill="#62ddb0"/>
+      <rect x="50" y="208" width="66" height="5" rx="2.5" fill="#8ca7ce"/>
+      <rect x="23" y="242" width="134" height="36" rx="10" fill="url(#blue)"/>
+      <path d="M83 254l9 6-9 6" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="72" y="290" width="36" height="3" rx="1.5" fill="#61799d"/>
+    </symbol>
+  </defs>
+  <rect x="1" y="1" width="1438" height="458" rx="28" fill="url(#bg)" stroke="#2b4161"/>
+  <rect x="1" y="1" width="1438" height="458" rx="28" fill="url(#grid)"/>
+  <ellipse cx="1130" cy="230" rx="330" ry="300" fill="url(#glow)"/>
+  <g font-family="DejaVu Sans,Arial,sans-serif">
+    <rect x="60" y="48" width="40" height="40" rx="12" fill="#3984ff20" stroke="#508ae0"/>
+    <g fill="#86baff" stroke="#86baff" stroke-width="1.8" stroke-linecap="round"><path d="M70 65a10 10 0 0 1 20 0v10H70z"/><path d="M73 54l-3-4m17 4 3-4" fill="none"/><circle cx="75" cy="63" r="1.3" fill="#101e38" stroke="none"/><circle cx="85" cy="63" r="1.3" fill="#101e38" stroke="none"/></g>
+    <text x="114" y="76" fill="#f0f5ff" font-size="25" font-weight="700" letter-spacing="1">REDROID<tspan fill="#62a5ff"> FARM</tspan></text>
+    <text x="62" y="144" fill="#91b8ee" font-size="12" font-weight="700" letter-spacing="3">LINUX / ANDROID ORCHESTRATION</text>
+    <text x="58" y="213" fill="#f2f6ff" font-size="54" font-weight="700" letter-spacing="-2">Your Android fleet.</text>
+    <text x="58" y="278" fill="#73acff" font-size="54" font-weight="700" letter-spacing="-2">One control center.</text>
+    <text x="62" y="319" fill="#9cafca" font-size="17">Create. Monitor. Control. All from your browser.</text>
+    <g font-size="12" font-weight="700" text-anchor="middle">
+      <rect x="62" y="358" width="126" height="32" rx="10" fill="#17334a" stroke="#2b665e"/><text x="125" y="379" fill="#7ce0bc">ANDROID 13</text>
+      <rect x="198" y="358" width="102" height="32" rx="10" fill="#1a2d4b" stroke="#345682"/><text x="249" y="379" fill="#a4cbff">DOCKER</text>
+      <rect x="310" y="358" width="88" height="32" rx="10" fill="#1a2d4b" stroke="#345682"/><text x="354" y="379" fill="#a4cbff">LINUX</text>
+      <rect x="408" y="358" width="130" height="32" rx="10" fill="#1a2d4b" stroke="#345682"/><text x="473" y="379" fill="#a4cbff">9:16 VIEWER</text>
+    </g>
+  </g>
+  <path d="M824 229h65m365 0h70" stroke="#457bc2" stroke-width="2" stroke-dasharray="5 7" opacity=".55"/>
+  <circle cx="822" cy="229" r="5" fill="#6baaff"/>
+  <g transform="translate(890 98) rotate(-9 85 151)" opacity=".65"><use href="#device" width="153" height="272"/></g>
+  <g transform="translate(1178 96) rotate(9 85 151)" opacity=".65"><use href="#device" width="153" height="272"/></g>
+  <g transform="translate(1021 53)"><use href="#device" width="198" height="352"/></g>
+</svg>
